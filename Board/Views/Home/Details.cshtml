@@ -1,0 +1,102 @@
+﻿@using Microsoft.AspNetCore.Http.Extensions
+@model Board.Models.Advert
+
+@{
+    ViewData["Title"] = "Details";
+    var photoPath = "~/images/" + (Model.PhotoPath ?? "noimage.jpg");
+}
+
+<h1>Детали вашего обьявления</h1>
+
+<div>
+
+    <hr />
+    <dl class="row">
+
+        <dt class="col-sm-2">
+            <label asp-for="Title" class="col-sm-2 control-label">Заголовок</label>
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class="col-sm-2">
+            <label asp-for="Category" class="col-sm-4 control-label">Категория</label>
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Category)
+        </dd>
+        <dt class="col-sm-2">
+            <label asp-for="ProductIsNew" class="control-label col-sm-4">Товар</label>
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ProductIsNew)
+        </dd>
+        <dt class="col-sm-2">
+            <label asp-for="Price" class="control-label col-sm-2">Цена</label>
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+        <dt class="col-sm-2">
+            <label asp-for="IsNegotiatedPrice" class="control-label">Договорная цена</label>
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IsNegotiatedPrice)
+        </dd>
+        <dt class="col-sm-2">
+            <label asp-for="Description" class="control-label">Описание</label>
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dd>
+            <img class="rounded" src="@photoPath" asp-append-version="true" style="width: 200px; height: 200px" />
+        </dd>
+    </dl>
+</div>
+
+<div>
+    @Html.ActionLink("PDF", "ConvertToPdf", new { id = Model.Id, sourceUrl = Context.Request.GetEncodedUrl() })|
+    @Html.ActionLink("Редактировать", "Edit", new { id = Model.Id }) |
+    <a asp-action="Index">На главную страницу</a>
+</div>
+<div>
+    <button type="button" class="btn btn-info" id="btn-download">ПДФ</button>
+</div>
+
+@section scripts
+{
+
+    <script language="javascript">
+        $(document).ready(function() {
+            $('#btn-download').bind("click",
+                function() {
+
+                    $.ajax({
+                        method: "GET",
+                        url: "https://localhost:44321/home/converttopdfAjax",
+                        xhrFields: {
+                            responseType: 'blob'
+                        },
+                        data: {
+                            sourceUrl: window.location.href
+                        },
+                        success: function (data) {
+                            var a = document.createElement('a');
+                            var url = window.URL.createObjectURL(data);
+                            a.href = url;
+                            a.download = 'Advert.pdf';
+                            document.body.append(a);
+                            a.click();
+                            a.remove();
+                            window.URL.revokeObjectURL(url);
+                        },
+                        error: function(er) {
+                            console.log(er);
+                        }
+
+                    });
+                });
+        });
+    </script>
+}

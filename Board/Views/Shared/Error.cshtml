@@ -1,0 +1,16 @@
+﻿@model MyBoard.ViewModels.ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+
+@if (Model?.ShowRequestId ?? false)
+{
+    <p>
+        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+    </p>
+}
+
+<div>
+    @ViewBag.ErrorMessage
+</div>

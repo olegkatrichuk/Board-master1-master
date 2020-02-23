@@ -1,0 +1,73 @@
+﻿@model Board.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+
+
+<hr />
+<div class="container row">
+    <div class="col-md-6">
+        <h1>Логин</h1>
+        <form asp-action="Login" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label">Пароль</label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RememberMe">
+                    <input asp-for="RememberMe" type="checkbox" />
+                    Запомнить меня
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Войти" class="btn btn-primary" />
+            </div>
+            <div>
+                <a asp-action="ForgotPassword">Забыли пароль?</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-6">
+        <h1>Войти с помощью</h1>
+        <br/>
+        @{
+            if (Model.ExternalLogins.Count == 0)
+            {
+              <div>No external Logins </div>
+          }
+            else
+            {
+                <form method="post" asp-action="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl">
+                    <div>
+                        @foreach (var provider in Model.ExternalLogins)
+                        {
+                            <button type="submit" class="btn btn-primary" style="width: auto"
+                                    name="provider" value="@provider.Name"
+                                    title="Login using your @provider.DisplayName account">
+                                @provider.DisplayName
+                            </button>
+                        }
+                    </div>
+                </form>
+            }
+        }
+    </div>
+    </div>
+
+    <div>
+        <a asp-action="Index" asp-controller="Home">На главную страницу</a>
+    </div>
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
