@@ -22,13 +22,13 @@
             <div class="col-5">
                 <input type="search" class="form-control" style="font-size: 20px" placeholder="@Localizer["String1"]" aria-label="Search" name="keyword" value="@ViewBag.keyword">
             </div>
-            <div class="col-5" id="#app">
-                <select type="text" class="form-control" style="font-size: 20px" v-model="selectedCity">
-                    <option disabled selected>
+            <div class="col-5" id="app" >
+                <select  type="text" class="form-control" style="font-size: 20px" v-model="selectedCity">
+                    @*<option value="">
                         @Localizer["String2"]
-                    </option>
-                    <option v-for="city in cities" v-bind:value="city.name">
-                        {{city.name}}
+                    </option>*@
+                    <option v-for="city in cities" v-bind:value="city.id">
+                        {{city}}
                     </option>
                 </select>
             </div>
@@ -170,19 +170,26 @@
     </div>
 </div>
 
-
 @section Scripts
 {
-    
+
+    <environment include="Development">
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    </environment>
     <script>
         var app = new Vue({
             el: '#app',
             data: {
+                info: 'hello',
                 cities: [
-                    { name: 'Винница' }
+                    '@Localizer["String2"]', 'Винница', 'Днепр', 'Донецк', 'Житомир', 'Запорожье', 'Ивано-Франковск', 'Киев', 'Кропивницкий', 'Луганск', 'Луцк', 'Львов', 'Николаев',
+                    'Одесса','Полтава','Ровно','Сумы','Тернополь','Ужгород','Харьков','Херсон','Хмельницкий','Черкассы','Чернигов','Черновцы' 
                 ]
             },
-            selectedCity: null
+            selectedCity: ''
         });
     </script>
 }
