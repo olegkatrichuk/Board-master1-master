@@ -22,7 +22,7 @@ namespace MyBoard.Controllers
     public class HomeController : Controller
     {
         private readonly IWebHostEnvironment _hostEnvironment;
-
+  
         public AppDbContext Context { get; }
 
         public HomeController(AppDbContext context, IWebHostEnvironment hostEnvironment)
@@ -66,10 +66,9 @@ namespace MyBoard.Controllers
                     foreach (var photo in model.Photos)
                     {
                         string uploadsFolder = Path.Combine(_hostEnvironment.WebRootPath, "images");
-                        uniqueFileName = Guid.NewGuid().ToString() + "_" + photo.FileName;
+                        uniqueFileName = Guid.NewGuid() + "_" + photo.FileName;
                         string filePath = Path.Combine(uploadsFolder, uniqueFileName);
                         photo.CopyTo(new FileStream(filePath, FileMode.Create));
-                        //string photoKey = "{id}:{photoNumber}";
                     }
 
                 }
@@ -140,9 +139,10 @@ namespace MyBoard.Controllers
         [HttpPost]
         public IActionResult Edit(Advert model)
         {
+            model.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             Context.Adverts.Update(model);
             Context.SaveChanges();
-            return RedirectToAction("Details", "Home", new { Id = model.Id });
+            return RedirectToAction("List", "Home", new { Id = model.Id });
         }
 
         [HttpGet]

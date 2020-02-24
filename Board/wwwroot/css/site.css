@@ -58,3 +58,8 @@ h1 {
 .brd {
     background-color: aqua
 }
+.img {
+    display: inline-block;
+    height: auto;
+    max-width: 100%;
+}

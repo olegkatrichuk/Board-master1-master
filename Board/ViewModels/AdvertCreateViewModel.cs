@@ -18,7 +18,7 @@ namespace Board.ViewModels
 
         public ProductNew? ProductIsNew { get; set; }
         [Required]
-        public decimal Price { get; set; }
+        public double Price { get; set; }
 
         public bool IsNegotiatedPrice { get; set; }
         [Required]

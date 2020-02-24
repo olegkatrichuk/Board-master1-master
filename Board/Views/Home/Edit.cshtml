@@ -9,69 +9,67 @@
 
 <hr />
 <div class="container">
-    
-        <form asp-action="Edit">
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <input hidden asp-for="Id" />
-            <input hidden asp-for="ExistingPhotoPath" />
-            <div class="form-group row">
-                <h4><label asp-for="Title" class="col-sm-2 control-label">Заголовок</label></h4>
-                <div class="col-sm-10">
-                    <input asp-for="Title" class="form-control col-6" />
-                    <span asp-validation-for="Title" class="text-danger"></span>
-                </div>
+    <form asp-action="Edit" method="post">
+        <input hidden asp-for="Id" />
+        <input hidden asp-for="ExistingPhotoPath" />
+        <div class="form-group row">
+            <h4><label asp-for="Title" class="col-sm-2 control-label">Заголовок</label></h4>
+            <div class="col-sm-10">
+                <input asp-for="Title" class="form-control col-6" />
+                <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-            <div class="form-group row">
-                <h4> <label asp-for="Category" class="col-sm-4 control-label">Категория</label></h4>
-                <div class="col-sm-8">
-                    <select asp-for="Category" style="width: 200px;height: 34px" asp-items="Html.GetEnumSelectList<Categor>()"></select>
-                    <span asp-validation-for="Category" class="text-danger"></span>
-                </div>
+        </div>
+        <div class="form-group row">
+            <h4> <label asp-for="Category" class="col-sm-4 control-label">Категория</label></h4>
+            <div class="col-sm-8">
+                <select asp-for="Category" style="width: 200px;height: 34px" asp-items="Html.GetEnumSelectList<Categor>()"></select>
+                <span asp-validation-for="Category" class="text-danger"></span>
             </div>
-            <div class="form-group row">
-                <h4><label asp-for="ProductIsNew" class="control-label col-sm-4">Товар</label></h4>
-                <div class="col-sm-8">
-                    <select asp-for="Category" style="width: 200px; height: 34px;" asp-items="Html.GetEnumSelectList<ProductNew>()"></select>
-                    <span asp-validation-for="ProductIsNew" class="text-danger"></span>
-                </div>
+        </div>
+        <div class="form-group row">
+            <h4><label asp-for="ProductIsNew" class="control-label col-sm-4">Товар</label></h4>
+            <div class="col-sm-8">
+                <select asp-for="ProductIsNew" style="width: 200px; height: 34px;" asp-items="Html.GetEnumSelectList<ProductNew>()"></select>
+                <span asp-validation-for="ProductIsNew" class="text-danger"></span>
             </div>
-            <div class="form-group row">
-                <h4><label asp-for="Price" class="control-label col-sm-2">Цена</label></h4>
-                <div class=" col-sm-10">
-                    <input asp-for="Price" class="form-control col-2" />
-                    <span asp-validation-for="Price" class="text-danger"></span>
-                </div>
+        </div>
+        <div class="form-group row">
+            <h4><label asp-for="Price" class="control-label col-sm-2">Цена</label></h4>
+            <div class=" col-sm-10">
+                <input asp-for="Price" class="form-control col-2" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
 
-            </div>
-            <div class="form-group form-check row">
-                <h5>
-                    <label class="form-check-label col-sm-12">
-                        <input class="form-check-input" asp-for="IsNegotiatedPrice" /> Договорная цена
-                    </label>
-                </h5>
-            </div>
-            <div class="form-group">
-                <h4><label asp-for="Description" class="control-label">Описание</label></h4>
-                <textarea asp-for="Description" class="form-control" style="height: 200px; width: 450px;resize: none"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group row col-sm-4 ">
-                <img src="@photoPath" asp-append-version="true"/>
-            </div>
-            <div class="form-group row">
-                <h4><label asp-for="Photos" class="col-sm-2 control-label">Изображение</label></h4>
-                <div class="col-sm-10">
-                    <div class="custom-file col-6">
-                        <input multiple asp-for="Photos" class="form-control custom-file-input" />
-                        <label class="custom-file-label">Выберите новое фото</label>
-                    </div>
+        </div>
+        <div class="form-group form-check row">
+            <h5>
+                <label class="form-check-label col-sm-12">
+                    <input class="form-check-input" asp-for="IsNegotiatedPrice" /> Договорная цена
+                </label>
+            </h5>
+        </div>
+        <div class="form-group">
+            <h4><label asp-for="Description" class="control-label">Описание</label></h4>
+            <textarea asp-for="Description" class="form-control" style="height: 200px; width: 450px;resize: none"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div class="form-group row col-sm-4 ">
+            <img src="@photoPath" asp-append-version="true" style="width: 200px; height: 200px"/>
+        </div>
+        <div class="form-group row">
+            <h4><label asp-for="Photos" class="col-sm-2 control-label">Изображение</label></h4>
+            <div class="col-sm-10">
+                <div class="custom-file col-6">
+                    <input multiple asp-for="Photos" class="form-control custom-file-input" />
+                    <label class="custom-file-label">Выберите новое фото</label>
                 </div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Сохранить" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Сохранить" class="btn btn-primary"/>
+        </div>
+    </form>
+</div>
 
 
 <div>
@@ -80,4 +78,18 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function() {
+            $('.custom-file-input').on("change", function() {
+                var fileLabel = $(this).next('.custom-file-label');
+                var files = $(this)[0].files;
+                if (files.length > 1) {
+                    fileLabel.html(files.length + ' выбрано фото');
+                } else if (files.length === 1) {
+                    fileLabel.html(files[0].name);
+                }
+            });
+        });
+    </script>
 }

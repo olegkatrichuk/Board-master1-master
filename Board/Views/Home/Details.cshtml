@@ -50,28 +50,82 @@
             @Html.DisplayFor(model => model.Description)
         </dd>
         <dd>
-            <img class="rounded" src="@photoPath" asp-append-version="true" style="width: 200px; height: 200px" />
+            <img class="rounded" src="@photoPath" asp-append-version="true" title="НЕТ КАРТИНКИ" style="width: 200px; height: 200px" />
         </dd>
     </dl>
 </div>
 
 <div>
-    @Html.ActionLink("PDF", "ConvertToPdf", new { id = Model.Id, sourceUrl = Context.Request.GetEncodedUrl() })|
+   @* @Html.ActionLink("PDF", "ConvertToPdf", new { id = Model.Id, sourceUrl = Context.Request.GetEncodedUrl() })|*@
     @Html.ActionLink("Редактировать", "Edit", new { id = Model.Id }) |
     <a asp-action="Index">На главную страницу</a>
 </div>
-<div>
-    <button type="button" class="btn btn-info" id="btn-download">ПДФ</button>
-</div>
+
+    <div id="js-result"></div>
+    <button type="button" class="btn btn-info" id="js-load">
+        <span class="spinner-grow spinner-grow-sm d-none" role="status" aria-hidden="true"></span>
+        Экспортировать в PDF
+    </button>
+
 
 @section scripts
 {
     @*createPDF*@
     <script language="javascript">
-        $(document).ready(function() {
+
+        $('#js-load').click(function () {
+            var _this = $(this);
+            $.ajax({
+                    type: 'GET',
+                    url: "https://localhost:44321/home/converttopdfAjax",
+                    xhrFields: {
+                        responseType: 'blob'
+                    },
+                    beforeSend: function() {
+                        _this
+                            .prop('disabled', true)
+                            .find('.spinner-grow').removeClass('d-none');
+                    },
+                    data: {
+                        sourceUrl: window.location.href
+                    }
+                })
+                .done(function(data) {
+                    var a = document.createElement('a');
+                    var url = window.URL.createObjectURL(data);
+                    a.href = url;
+                    a.download = 'Advert.pdf';
+                    document.body.append(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+
+
+                    var output = "";
+                    for (var i in data) {
+                        if (data.hasOwnProperty(i)) {
+                            output += ($('<span>').text(data[i]))[0].outerHTML;
+                        }
+                    }
+                    output = ($('<span>').html(output))[0].outerHTML;
+                    $('#js-result').html(output);
+                    _this.find('.spinner-grow').addClass('d-none');
+                });
+        });
+
+        $(document).ajaxComplete(function () {
+            $("#js-load").attr('disabled', false);
+        });
+
+    </script>
+
+
+
+
+    @*$(document).ready(function() {
             $('#btn-download').bind("click",
                 function() {
-
+                    $(this).attr('disabled', true);
                     $.ajax({
                         method: "GET",
                         url: "https://localhost:44321/home/converttopdfAjax",
@@ -97,6 +151,5 @@
 
                     });
                 });
-        });
-    </script>
+        });*@
 }

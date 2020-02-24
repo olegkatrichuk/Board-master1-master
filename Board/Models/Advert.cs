@@ -19,7 +19,7 @@ namespace Board.Models
     public ProductNew? ProductIsNew { get; set; }
 
     [Display(Name = "Цена")]
-    public decimal Price { get; set; }
+    public double Price { get; set; }
 
     [Display(Name = "Договорная цена")]
     public bool IsNegotiatedPrice { get; set; }
