@@ -22,7 +22,7 @@ namespace MyBoard.Controllers
     public class HomeController : Controller
     {
         private readonly IWebHostEnvironment _hostEnvironment;
-  
+
         public AppDbContext Context { get; }
 
         public HomeController(AppDbContext context, IWebHostEnvironment hostEnvironment)
@@ -59,19 +59,8 @@ namespace MyBoard.Controllers
         {
             if (ModelState.IsValid)
             {
-                string uniqueFileName = null;
-                if (model.Photos != null && model.Photos.Count > 0)
-                {
+                string uniqueFileName = ProcessUploadedFile(model);
 
-                    foreach (var photo in model.Photos)
-                    {
-                        string uploadsFolder = Path.Combine(_hostEnvironment.WebRootPath, "images");
-                        uniqueFileName = Guid.NewGuid() + "_" + photo.FileName;
-                        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                        photo.CopyTo(new FileStream(filePath, FileMode.Create));
-                    }
-
-                }
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 Advert newAdvert = new Advert
                 {
@@ -121,8 +110,10 @@ namespace MyBoard.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             Advert advert = await Context.Adverts.FirstOrDefaultAsync(p => p.Id == id);
-            AdvertEditViewModel advertCreateViewModel = new AdvertEditViewModel
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            AdvertEditViewModel advertEditViewModel = new AdvertEditViewModel
             {
+                UserId = userId,
                 Id = advert.Id,
                 Title = advert.Title,
                 Category = advert.Category,
@@ -133,16 +124,59 @@ namespace MyBoard.Controllers
                 ExistingPhotoPath = advert.PhotoPath
             };
 
-            return View(advertCreateViewModel);
+            return View(advertEditViewModel);
+        }
+
+        private string ProcessUploadedFile(AdvertCreateViewModel model)
+        {
+            string uniqueFileName = null;
+            if (model.Photos != null && model.Photos.Count > 0)
+            {
+                foreach (IFormFile photo in model.Photos)
+                {
+                    string uploadsFolder = Path.Combine(_hostEnvironment.WebRootPath, "images");
+                    uniqueFileName = Guid.NewGuid() + "_" + photo.FileName;
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                    using var fileStream = new FileStream(filePath, FileMode.Create);
+                    photo.CopyTo(fileStream);
+                }
+
+            }
+
+            return uniqueFileName;
         }
 
         [HttpPost]
-        public IActionResult Edit(Advert model)
+        public async Task<IActionResult> Edit(AdvertEditViewModel model)
         {
-            model.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            Context.Adverts.Update(model);
-            Context.SaveChanges();
-            return RedirectToAction("List", "Home", new { Id = model.Id });
+            if (ModelState.IsValid)
+            {
+                Advert advert = await Context.Adverts.FirstOrDefaultAsync(p => p.Id == model.Id);
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                advert.Title = model.Title;
+                advert.Category = model.Category;
+                advert.ProductIsNew = model.ProductIsNew;
+                advert.Price = model.Price;
+                advert.IsNegotiatedPrice = model.IsNegotiatedPrice;
+                advert.Description = model.Description;
+                advert.UserId = userId;
+
+                if (model.Photos != null)
+                {
+                    if (model.ExistingPhotoPath != null)
+                    {
+                        string filePath = Path.Combine(_hostEnvironment.WebRootPath, "images", model.ExistingPhotoPath);
+                        System.IO.File.Delete(filePath);
+                    }
+                    advert.PhotoPath = ProcessUploadedFile(model);
+                }
+
+                Context.Update(advert);
+                Context.SaveChanges();
+                return RedirectToAction("List", "Home");
+            }
+
+            return View();
         }
 
         [HttpGet]
@@ -207,42 +241,42 @@ namespace MyBoard.Controllers
 
         [HttpGet]
         public IActionResult ConvertToPdfAjax(string sourceUrl)
-        { 
-         
-          SelectPdf.HtmlToPdf converter = new SelectPdf.HtmlToPdf();
-          SelectPdf.PdfDocument doc = converter.ConvertUrl(sourceUrl);
+        {
 
-          MemoryStream ms = new MemoryStream();
-          doc.Save(ms);
-          doc.Close();
+            SelectPdf.HtmlToPdf converter = new SelectPdf.HtmlToPdf();
+            SelectPdf.PdfDocument doc = converter.ConvertUrl(sourceUrl);
 
-          ms.Position = 0;
+            MemoryStream ms = new MemoryStream();
+            doc.Save(ms);
+            doc.Close();
 
-          FileStreamResult fileStreamResult = new FileStreamResult(ms, "application/pdf")
-          {
-            FileDownloadName = "Advert.pdf"
-          };
+            ms.Position = 0;
 
-           return fileStreamResult;
+            FileStreamResult fileStreamResult = new FileStreamResult(ms, "application/pdf")
+            {
+                FileDownloadName = "Advert.pdf"
+            };
+
+            return fileStreamResult;
         }
 
         [HttpGet]
         public IActionResult Search(string keyword, int page = 1)
         {
-          if (keyword == null || keyword.Length < 3 || keyword.Length > 20)
-          {
-            return RedirectToAction("Index", "Home");
-          }
-          else
-          {
-            int pageSize = 8;
-            var product = Context.Adverts.Where(p => p.Title.Contains(keyword));
-            var model = new PagedList<Advert>(product.Include(x => x.Category), page,
-              pageSize);
+            if (keyword == null || keyword.Length < 3 || keyword.Length > 20)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                int pageSize = 8;
+                var product = Context.Adverts.Where(p => p.Title.Contains(keyword));
+                var model = new PagedList<Advert>(product.Include(x => x.Category), page,
+                  pageSize);
 
-            ViewBag.keyword = keyword;
-            return View(model);
-          }
+                ViewBag.keyword = keyword;
+                return View(model);
+            }
         }
-  }
+    }
 }

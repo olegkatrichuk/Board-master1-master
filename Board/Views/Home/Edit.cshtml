@@ -9,7 +9,7 @@
 
 <hr />
 <div class="container">
-    <form asp-action="Edit" method="post">
+    <form asp-action="Edit" method="post" enctype="multipart/form-data">
         <input hidden asp-for="Id" />
         <input hidden asp-for="ExistingPhotoPath" />
         <div class="form-group row">

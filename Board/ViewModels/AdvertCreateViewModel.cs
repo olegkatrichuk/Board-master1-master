@@ -25,5 +25,7 @@ namespace Board.ViewModels
         public string Description { get; set; }
 
         public List<IFormFile> Photos { get; set; }
+
+        public string UserId { get; set; }
     }
 }
