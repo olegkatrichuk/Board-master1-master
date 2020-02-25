@@ -1,10 +1,37 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Board.Models
+@model MyBoard.Models.IndexViewModel
+@inject IViewLocalizer Localizer
 @{
     ViewData["Title"] = "Home Page";
 }
 
+<style>
+    @@font-face {
+        font-family: 'FontAwesome';
+        src: url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2') format('woff2'), url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff') format('woff'), url('https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/fonts/fontawesome-webfont.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal
+    }
 
-@inject IViewLocalizer Localizer
+    .glyphicon {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: inherit;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale
+    }
+
+    .glyphicon-chevron-right:before {
+        content: "\f054";
+    }
+
+    .glyphicon-chevron-left:before {
+        content: "\f053";
+    }
+</style>
+
 @*<div>
         <link href="https://fonts.googleapis.com/css?family=Raleway:200,100,400" rel="stylesheet" type="text/css" />
         <h1 class="text-center">
@@ -22,11 +49,11 @@
             <div class="col-5">
                 <input type="search" class="form-control" style="font-size: 20px" placeholder="@Localizer["String1"]" aria-label="Search" name="keyword" value="@ViewBag.keyword">
             </div>
-            <div class="col-5" id="app" >
-                <select  type="text" class="form-control" style="font-size: 20px" v-model="selectedCity">
+            <div class="col-5" id="app">
+                <select type="text" class="form-control" style="font-size: 20px" v-model="selectedCity">
                     @*<option value="">
-                        @Localizer["String2"]
-                    </option>*@
+                            @Localizer["String2"]
+                        </option>*@
                     <option v-for="city in cities" v-bind:value="city.id">
                         {{city}}
                     </option>
@@ -39,46 +66,81 @@
 
     </form>
 </div>
-<div class="container m-4" style="font-size: 20px">
-    <div class="row p-1">
-        <div class="col-4 d-flex bg-light text-dark">
+<div class="container m-4 p-1" style="font-size: 20px">
+    <div class="row">
+        <div class="col-4 bg-light text-dark">
             <div class="row">
-                <div class="col-4">
-                    <img class="img-fluid" src="~/img/house.png" />
+                <div class="col-3">
+                    <img class="d-none d-sm-block " src="~/img/house.png" />
                 </div>
-                <div class="col-8 d-flex">
+                <div class="col-9">
                     <a href=""> Недвижимость</a>
                 </div>
             </div>
         </div>
         <div class="col-4 bg-light text-dark">
-            <a href=""> Транспорт</a>
+            <div class="row">
+                <div class="col-2">
+                    <img class="d-none d-sm-block" src="~/img/car.png" />
+                </div>
+                <div class="col-10">
+                    <a href=""> Транспорт</a>
+                </div>
+            </div>
         </div>
         <div class="col-4 bg-light text-dark">
-            <a href="">Работа</a>
+            <div class="row">
+                <div class="col-2">
+                    <img class="d-none d-sm-block m-1" src="~/img/work.png" />
+                </div>
+                <div class="col-10 d-flex">
+                    <a href="">Работа</a>
+                </div>
+            </div>
         </div>
     </div>
     <div class="row">
-        <div class="col-4  d-flex bg-light text-dark">
-            <div class="row p-1">
-                <div class="col-5">
-                    <img src="~/img/animal.png" />
+        <div class="col-4  bg-light text-dark">
+            <div class="row">
+                <div class="col-3">
+                    <img class="d-none d-sm-block m-1 " src="~/img/animal.png" />
                 </div>
-                <div class="col-7">
+                <div class="col-9 ">
                     <a href=""> Животные</a>
                 </div>
             </div>
         </div>
         <div class="col-4 bg-light text-dark">
-            <a href="">Электроника</a>
+            <div class="row">
+                <div class="col-2">
+                    <img class="d-none d-sm-block" src="~/img/tv.png" />
+                </div>
+                <div class="col-10 ">
+                    <a href="">Электроника</a>
+                </div>
+            </div>
         </div>
         <div class="col-4 bg-light text-dark">
-            <a href="">Спорт</a>
+            <div class="row">
+                <div class="col-2">
+                    <img class="d-none d-sm-block m-1" src="~/img/ball.png" />
+                </div>
+                <div class="col-10 d-flex">
+                    <a href="">Спорт</a>
+                </div>
+            </div>
         </div>
     </div>
     <div class="row">
         <div class="col-4 bg-light text-dark">
-            <a href="">Услуги</a>
+            <div class="row">
+                <div class="col-3">
+                    <img src="~/img/help.png" />
+                </div>
+                <div class="col-9">
+                    <a href="">Услуги</a>
+                </div>
+            </div>
         </div>
         <div class="col-4 bg-light text-dark">
             <a href="">Одежда</a>
@@ -108,110 +170,59 @@
         <div class="col-4"></div>
     </div>
 </div>
-<div class="container">
-    <div class="row">
-        <div class="col-4">
-            <div class="card">
-                <div class="image">
-                    <img src="http://loremflickr.com/320/150" />
-                </div>
-                <div class="card-inner">
-                    <div class="header">
-                        <h2>Title</h2>
-                        <h2>Sub-Head</h2>
-                    </div>
-                    <div class="content">
-                        <p>Content area</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-4">
-            <div class="card">
-                <div class="image">
-                    <img src="http://loremflickr.com/320/150" />
-                </div>
-                <div class="card-inner">
-                    <div class="header">
-                        <h2>Title</h2>
-                        <h2>Sub-Head</h2>
-                    </div>
-                    <div class="content">
-                        <p>Content area</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-4">
-            <div class="card">
-                <div class="image">
-                    <img src="http://loremflickr.com/320/150" />
-                </div>
-                <div class="card-inner">
-                    <div class="header">
-                        <h2>Title</h2>
-                        <h2>Sub-Head</h2>
-                    </div>
-                    <div class="content">
-                        <p>Content area</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <br />
-    <div class="row">
-        <div class="col-4">
-            <div class="card">
-                <div class="image">
-                    <img src="http://loremflickr.com/320/150" />
-                </div>
-                <div class="card-inner">
-                    <div class="header">
-                        <h2>Title</h2>
-                        <h2>Sub-Head</h2>
-                    </div>
-                    <div class="content">
-                        <p>Content area</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-4">
-            <div class="card">
-                <div class="image">
-                    <img src="http://loremflickr.com/320/150" />
-                </div>
-                <div class="card-inner">
-                    <div class="header">
-                        <h2>Title</h2>
-                        <h2>Sub-Head</h2>
-                    </div>
-                    <div class="content">
-                        <p>Content area</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-4">
-            <div class="card">
-                <div class="image">
-                    <img src="http://loremflickr.com/320/150" />
-                </div>
-                <div class="card-inner">
-                    <div class="header">
-                        <h2>Title</h2>
-                        <h2>Sub-Head</h2>
-                    </div>
-                    <div class="content">
-                        <p>Content area</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
+<div class="container  align-self-center " style="display: flex">
+    @{ int i = 3;}
+    @foreach (var item in Model.Adverts)
+    {
+
+        if (i > 0 && i % 3 == 0)
+        {
+        @:</div><div class="row">
+        }
+        <div class="card p-3 m-3 " style="width: 21rem; ">
+            <div class="card-img-top">
+                @{ var photoPath = "~/images/" + (item.PhotoPath ?? "noimage.jpg"); }
+                <img class="rounded img-fluid" src="@photoPath" asp-append-version="true" style="max-width: 320px; max-height: 200px;" />
+            </div>
+            <div class="card-inner">
+                <div class="header">
+                    <h2>@item.Title</h2>
+                    <h2>
+                        @item.Price
+                    </h2>
+                </div>
+                <div class="card-body text-left">
+                    <div>@item.Description</div>
+                </div>
+            </div>
+        </div>
+
+        i++;
+
+    }
+</div>
+<hr />
+<div class="text-xl-center">
+@if (Model.PageViewModel.HasPreviousPage)
+{
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+       class="btn btn-outline-primary">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        Назад
+    </a>
+}
+@if (Model.PageViewModel.HasNextPage)
+{
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+       class="btn btn-outline-primary">
+        Вперед
+        <i class="glyphicon glyphicon-chevron-right"></i>
+    </a>
+}
+</div>
 @section Scripts
 {
 
@@ -228,7 +239,7 @@
                 info: 'hello',
                 cities: [
                     '@Localizer["String2"]', 'Винница', 'Днепр', 'Донецк', 'Житомир', 'Запорожье', 'Ивано-Франковск', 'Киев', 'Кропивницкий', 'Луганск', 'Луцк', 'Львов', 'Николаев',
-                    'Одесса','Полтава','Ровно','Сумы','Тернополь','Ужгород','Харьков','Херсон','Хмельницкий','Черкассы','Чернигов','Черновцы' 
+                    'Одесса','Полтава','Ровно','Сумы','Тернополь','Ужгород','Харьков','Херсон','Хмельницкий','Черкассы','Чернигов','Черновцы'
                 ]
             },
             selectedCity: ''

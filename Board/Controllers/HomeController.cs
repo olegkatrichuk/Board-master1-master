@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
+using MyBoard.Models;
 using MyBoard.ViewModels;
 using X.PagedList;
 
@@ -31,9 +32,22 @@ namespace MyBoard.Controllers
             Context = context;
         }
         [AllowAnonymous]
-        public IActionResult Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-            return View();
+            int pageSize = 9;
+
+            IQueryable<Advert> source = Context.Adverts.AsQueryable();
+            var count = await source.CountAsync();
+            var items = await source.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
+            IndexViewModel viewModel = new IndexViewModel
+            {
+                PageViewModel = pageViewModel,
+                Adverts = items
+            };
+            return View(viewModel);
+            //return View();
         }
 
         [Authorize]
@@ -44,6 +58,25 @@ namespace MyBoard.Controllers
             var query = await Context.Adverts.Where(x => x.UserId == userId).ToListAsync();
 
             return View(query);
+        }
+
+        public async Task<IActionResult> ListAll(int page=1)
+        {
+            //var query = await Context.Adverts.ToListAsync();
+            //return View(query);
+            int pageSize = 9;
+
+            IQueryable<Advert> source = Context.Adverts.AsQueryable();
+            var count = await source.CountAsync();
+            var items = await source.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
+            IndexViewModel viewModel = new IndexViewModel
+            {
+                PageViewModel = pageViewModel,
+                Adverts = items
+            };
+            return View(viewModel);
         }
 
         [HttpGet]
@@ -278,5 +311,6 @@ namespace MyBoard.Controllers
                 return View(model);
             }
         }
+
     }
 }
