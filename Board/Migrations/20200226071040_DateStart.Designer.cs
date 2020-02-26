@@ -4,14 +4,16 @@ using Board.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Board.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200226071040_DateStart")]
+    partial class DateStart
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,9 +31,6 @@ namespace Board.Migrations
                     b.Property<int?>("Category")
                         .HasColumnType("int");
 
-                    b.Property<int?>("City")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("DateStartTime")
                         .HasColumnType("datetime2");
 
@@ -40,9 +39,6 @@ namespace Board.Migrations
 
                     b.Property<bool>("IsNegotiatedPrice")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhotoPath")
                         .HasColumnType("nvarchar(max)");

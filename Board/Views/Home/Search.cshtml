@@ -1,0 +1,59 @@
+﻿@using Board.Models
+@model MyBoard.Models.IndexViewModel
+
+@{
+    ViewData["Title"] = "Search";
+}
+
+<h1>Результаты поиска</h1>
+
+<div class="container  align-self-center " style="display: flex">
+    @{ int i = 3;}
+    @foreach (var item in Model.Adverts)
+    {
+
+        if (i > 0 && i % 3 == 0)
+        {
+            @:</div><div class="row">
+        }
+        <div class="card p-3 m-3 " style="width: 21rem; ">
+            <div class="card-img-top">
+                @{ var photoPath = "~/images/" + (item.PhotoPath ?? "noimage.jpg"); }
+                <img class="rounded img-fluid" src="@photoPath" asp-append-version="true" style="max-width: 320px; max-height: 200px;" />
+            </div>
+            <div class="card-inner">
+                <div class="header">
+                    <h2>@item.Title</h2>
+                    <h2>
+                        @item.Price
+                    </h2>
+                </div>
+
+            </div>
+        </div>
+
+        i++;
+
+    }
+</div>
+<hr />
+<div class="text-xl-center">
+    @if (Model.PageViewModel.HasPreviousPage)
+    {
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+           class="btn btn-outline-primary">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+            Назад
+        </a>
+    }
+    @if (Model.PageViewModel.HasNextPage)
+    {
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+           class="btn btn-outline-primary">
+            Вперед
+            <i class="glyphicon glyphicon-chevron-right"></i>
+        </a>
+    }
+</div>

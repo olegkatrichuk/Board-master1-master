@@ -44,20 +44,18 @@
     </div>*@
 
 <div class="container mt-4 p-4 rounded" style="background: bisque">
-    <form asp-action="Search" method="get" asp-controller="Home">
+    <form asp-action="Search"  asp-controller="Home" method="post">
         <div class="form-row">
             <div class="col-5">
-                <input type="search" class="form-control" style="font-size: 20px" placeholder="@Localizer["String1"]" aria-label="Search" name="keyword" value="@ViewBag.keyword">
+                <input type="text" class="form-control" style="font-size: 20px" placeholder="@Localizer["String1"]" aria-label="Search" name="keyword" value="@ViewBag.keyword">
             </div>
             <div class="col-5" id="app">
-                <select type="text" class="form-control" style="font-size: 20px" v-model="selectedCity">
-                    @*<option value="">
-                            @Localizer["String2"]
-                        </option>*@
-                    <option v-for="city in cities" v-bind:value="city.id">
+                <select type="text" class="form-control" style="font-size: 20px" v-model="selectedCity" name="selectedCity" >
+                    <option v-for="city in cities" v-bind:value="city">
                         {{city}}
                     </option>
                 </select>
+                <div class="d-none">@ViewBag.citykeyword = {{selectedCity}}</div>
             </div>
             <div class="col-2">
                 <button type="submit" class="btn btn-primary " style="font-size: 20px;">@Localizer["String3"]</button>
@@ -70,10 +68,10 @@
     <div class="row">
         <div class="col-4 bg-light text-dark">
             <div class="row">
-                <div class="col-3">
+                <div class="col-2">
                     <img class="d-none d-sm-block " src="~/img/house.png" />
                 </div>
-                <div class="col-9">
+                <div class="col-10">
                     <a href=""> Недвижимость</a>
                 </div>
             </div>
@@ -102,10 +100,10 @@
     <div class="row">
         <div class="col-4  bg-light text-dark">
             <div class="row">
-                <div class="col-3">
+                <div class="col-2">
                     <img class="d-none d-sm-block m-1 " src="~/img/animal.png" />
                 </div>
-                <div class="col-9 ">
+                <div class="col-10 ">
                     <a href=""> Животные</a>
                 </div>
             </div>
@@ -134,38 +132,87 @@
     <div class="row">
         <div class="col-4 bg-light text-dark">
             <div class="row">
-                <div class="col-3">
-                    <img src="~/img/help.png" />
+                <div class="col-2">
+                    <img class="d-none d-sm-block " src="~/img/help.png" />
                 </div>
-                <div class="col-9">
+                <div class="col-10">
                     <a href="">Услуги</a>
                 </div>
             </div>
         </div>
         <div class="col-4 bg-light text-dark">
-            <a href="">Одежда</a>
+            <div class="row">
+                <div class="col-2">
+                    <img class="d-none d-sm-block " src="~/img/T-short.png" />
+                </div>
+                <div class="col-10 d-flex">
+                    <a href="">Одежда</a>
+                </div>
+            </div>
         </div>
         <div class="col-4 bg-light text-dark">
-            <a href="">Дети</a>
+            <div class="row">
+                <div class="col-2">
+                    <img class="d-none d-sm-block " src="~/img/boj.png" />
+                </div>
+                <div class="col-10 d-flex">
+                    <a href="">Дети</a>
+                </div>
+            </div>
         </div>
     </div>
     <div class="row">
         <div class="col-4 bg-light text-dark">
-            <a href="">Запчасти</a>
+            <div class="row">
+                <div class="col-2 pt-1">
+                    <img class="d-none d-sm-block " src="~/img/workh.png" />
+                </div>
+                <div class="col-10 d-flex">
+                    <a href="">Запчасти</a>
+                </div>
+            </div>
         </div>
         <div class="col-4 bg-light text-dark">
-            <a href="">Обмен</a>
+            <div class="row">
+                <div class="col-2 pt-1">
+                    <img class="d-none d-sm-block "src="~/img/change.png" /> 
+                </div>
+                <div class="col-10 d-flex">
+                    <a href="">Обмен</a>
+                </div>
+            </div>
         </div>
         <div class="col-4 bg-light text-dark">
-            <a href="">Подарю</a>
+            <div class="row">
+                <div class="col-2 pt-1">
+                    <img class="d-none d-sm-block "src="~/img/surprize.png" />
+                </div>
+                <div class="col-10 d-flex ">
+                    <a href="">Подарю</a>
+                </div>
+            </div>
         </div>
     </div>
     <div class="row">
         <div class="col-4 bg-light text-dark">
-            <a href="">Отдых</a>
+            <div class="row">
+                <div class="col-2 pt-1">
+                    <img class="d-none d-sm-block "src="~/img/vacation.png" />
+                </div>
+                <div class="col-10 d-flex ">
+                    <a href="">Отдых</a>
+                </div>
+            </div>
         </div>
         <div class="col-4 bg-light text-dark">
-            <a href="">Бизнес</a>
+            <div class="row">
+                <div class="col-2 pt-1">
+                    <img class="d-none d-sm-block "src="~/img/business.png" />
+                </div>
+                <div class="col-10 d-flex ">
+                    <a href="">Бизнес</a>
+                </div>
+            </div>
         </div>
         <div class="col-4"></div>
     </div>
@@ -192,9 +239,7 @@
                         @item.Price
                     </h2>
                 </div>
-                <div class="card-body text-left">
-                    <div>@item.Description</div>
-                </div>
+                
             </div>
         </div>
 
@@ -236,13 +281,13 @@
         var app = new Vue({
             el: '#app',
             data: {
-                info: 'hello',
+                selectedCity: '',
                 cities: [
                     '@Localizer["String2"]', 'Винница', 'Днепр', 'Донецк', 'Житомир', 'Запорожье', 'Ивано-Франковск', 'Киев', 'Кропивницкий', 'Луганск', 'Луцк', 'Львов', 'Николаев',
                     'Одесса','Полтава','Ровно','Сумы','Тернополь','Ужгород','Харьков','Херсон','Хмельницкий','Черкассы','Чернигов','Черновцы'
                 ]
-            },
-            selectedCity: ''
+            }
+            
         });
     </script>
 }

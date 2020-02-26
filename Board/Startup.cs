@@ -51,8 +51,6 @@ namespace MyBoard
 
       });
 
-      
-
       services.Configure<CookiePolicyOptions>(options =>
       {
         // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -117,9 +115,6 @@ namespace MyBoard
 
       services.AddControllersWithViews(options =>
         {
-          //var policy = new AuthorizationPolicyBuilder()
-          //  .Build();
-          //options.Filters.Add(new AuthorizeFilter(policy));
         })
         .AddNewtonsoftJson();
 
@@ -127,7 +122,6 @@ namespace MyBoard
       services.AddSingleton<IAuthorizationHandler, SuperAdminHandler>();
     }
 
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
       var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
@@ -140,7 +134,6 @@ namespace MyBoard
       else
       {
         app.UseExceptionHandler("/Home/Error");
-        // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
         app.UseHsts();
       }
 
@@ -158,21 +151,6 @@ namespace MyBoard
 
       app.UseEndpoints(endpoints =>
       {
-        //endpoints.MapControllerRoute(
-        //  name: "defaultWithCulture",
-        //  pattern: "{culture}/{controller=Home}/{action=Index}/{id?}",
-        //  defaults:
-        //  new { culture = "ru" },
-        //  constraints:
-        //  new
-        //  {
-        //    culture = new CompositeRouteConstraint(
-        //      new IRouteConstraint[]
-        //      {new AlphaRouteConstraint(),
-        //        new MaxLengthRouteConstraint(2) })
-        //  },
-        //  dataTokens: new { culture = "ru" });
-
         endpoints.MapControllerRoute(
           name: "default",
           pattern: "{controller=Home}/{action=Index}/{id?}");
@@ -180,8 +158,6 @@ namespace MyBoard
         endpoints.MapControllerRoute(
           name: "defaultError",
           pattern: "{controller=Error}/{action=Error}");
-        //endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
-
       });
     }
   }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -15,30 +16,28 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using MyBoard.Models;
 using MyBoard.ViewModels;
-using X.PagedList;
 
 namespace MyBoard.Controllers
 {
-    //[Authorize]
     public class HomeController : Controller
     {
         private readonly IWebHostEnvironment _hostEnvironment;
-
-        public AppDbContext Context { get; }
+        private readonly AppDbContext _context;
 
         public HomeController(AppDbContext context, IWebHostEnvironment hostEnvironment)
         {
             _hostEnvironment = hostEnvironment;
-            Context = context;
+            _context = context;
         }
+
         [AllowAnonymous]
         public async Task<IActionResult> Index(int page = 1)
         {
+            var result = _context.Adverts.OrderByDescending(x => x.DateStartTime);
             int pageSize = 9;
 
-            IQueryable<Advert> source = Context.Adverts.AsQueryable();
-            var count = await source.CountAsync();
-            var items = await source.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            var count = await result.CountAsync();
+            var items = await result.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
             PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
             IndexViewModel viewModel = new IndexViewModel
@@ -47,7 +46,6 @@ namespace MyBoard.Controllers
                 Adverts = items
             };
             return View(viewModel);
-            //return View();
         }
 
         [Authorize]
@@ -55,28 +53,9 @@ namespace MyBoard.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var query = await Context.Adverts.Where(x => x.UserId == userId).ToListAsync();
+            var query = await _context.Adverts.Where(x => x.UserId == userId).ToListAsync();
 
             return View(query);
-        }
-
-        public async Task<IActionResult> ListAll(int page=1)
-        {
-            //var query = await Context.Adverts.ToListAsync();
-            //return View(query);
-            int pageSize = 9;
-
-            IQueryable<Advert> source = Context.Adverts.AsQueryable();
-            var count = await source.CountAsync();
-            var items = await source.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
-
-            PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
-            IndexViewModel viewModel = new IndexViewModel
-            {
-                PageViewModel = pageViewModel,
-                Adverts = items
-            };
-            return View(viewModel);
         }
 
         [HttpGet]
@@ -104,11 +83,14 @@ namespace MyBoard.Controllers
                     Price = model.Price,
                     IsNegotiatedPrice = model.IsNegotiatedPrice,
                     Description = model.Description,
-                    PhotoPath = uniqueFileName
+                    PhotoPath = uniqueFileName,
+                    DateStartTime = DateTime.Now,
+                    City = model.City,
+                    Phone = model.Phone
                 };
 
-                Context.Add(newAdvert);
-                Context.SaveChanges();
+                _context.Add(newAdvert);
+                _context.SaveChanges();
                 return RedirectToAction("Details", "Home", new { Id = newAdvert.Id });
             }
 
@@ -119,7 +101,7 @@ namespace MyBoard.Controllers
         {
             if (id != null)
             {
-                Advert advert = await Context.Adverts.FirstOrDefaultAsync(p => p.Id == id);
+                Advert advert = await _context.Adverts.FirstOrDefaultAsync(p => p.Id == id);
                 if (advert != null)
                     return View(advert);
             }
@@ -142,7 +124,7 @@ namespace MyBoard.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
-            Advert advert = await Context.Adverts.FirstOrDefaultAsync(p => p.Id == id);
+            Advert advert = await _context.Adverts.FirstOrDefaultAsync(p => p.Id == id);
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             AdvertEditViewModel advertEditViewModel = new AdvertEditViewModel
             {
@@ -184,7 +166,7 @@ namespace MyBoard.Controllers
         {
             if (ModelState.IsValid)
             {
-                Advert advert = await Context.Adverts.FirstOrDefaultAsync(p => p.Id == model.Id);
+                Advert advert = await _context.Adverts.FirstOrDefaultAsync(p => p.Id == model.Id);
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 advert.Title = model.Title;
                 advert.Category = model.Category;
@@ -204,8 +186,8 @@ namespace MyBoard.Controllers
                     advert.PhotoPath = ProcessUploadedFile(model);
                 }
 
-                Context.Update(advert);
-                Context.SaveChanges();
+                _context.Update(advert);
+                _context.SaveChanges();
                 return RedirectToAction("List", "Home");
             }
 
@@ -218,7 +200,7 @@ namespace MyBoard.Controllers
         {
             if (id != null)
             {
-                Advert advert = await Context.Adverts.FirstOrDefaultAsync(p => p.Id == id);
+                Advert advert = await _context.Adverts.FirstOrDefaultAsync(p => p.Id == id);
                 if (advert != null)
                     return View(advert);
             }
@@ -230,11 +212,11 @@ namespace MyBoard.Controllers
         {
             if (id != null)
             {
-                Advert advert = await Context.Adverts.FirstOrDefaultAsync(p => p.Id == id);
+                Advert advert = await _context.Adverts.FirstOrDefaultAsync(p => p.Id == id);
                 if (advert != null)
                 {
-                    Context.Adverts.Remove(advert);
-                    await Context.SaveChangesAsync();
+                    _context.Adverts.Remove(advert);
+                    await _context.SaveChangesAsync();
                     return RedirectToAction("List");
                 }
             }
@@ -293,8 +275,8 @@ namespace MyBoard.Controllers
             return fileStreamResult;
         }
 
-        [HttpGet]
-        public IActionResult Search(string keyword, int page = 1)
+        [HttpPost]
+        public async Task<IActionResult> Search(string keyword, string selectedCity, int page = 1)
         {
             if (keyword == null || keyword.Length < 3 || keyword.Length > 20)
             {
@@ -302,15 +284,25 @@ namespace MyBoard.Controllers
             }
             else
             {
-                int pageSize = 8;
-                var product = Context.Adverts.Where(p => p.Title.Contains(keyword));
-                var model = new PagedList<Advert>(product.Include(x => x.Category), page,
-                  pageSize);
+                var result = _context.Adverts.OrderByDescending(x => x.DateStartTime);
+                int pageSize = 9;
+                
+                var product = result.Where(p => p.Title.Contains(keyword));
 
+                var count = await product.CountAsync();
+                var items = await product.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+                PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
+                IndexViewModel viewModel = new IndexViewModel
+                {
+                    PageViewModel = pageViewModel,
+                    Adverts = items
+                }; 
+                ViewBag.citykeyword = selectedCity;
                 ViewBag.keyword = keyword;
-                return View(model);
+                return View(viewModel);
+
             }
         }
-
     }
 }

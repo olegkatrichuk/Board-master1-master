@@ -24,5 +24,12 @@ namespace Board.ViewModels
 
     public string PhotoPath { get; set; }
 
-  }
+    public DataType DataStart { get; set; }
+
+    public City? City { get; set; }
+
+    [Phone]
+    public string Phone { get; set; }
+
+    }
 }
