@@ -47,10 +47,13 @@
     <form asp-action="Search"  asp-controller="Home" method="post">
         <div class="form-row">
             <div class="col-5">
-                <input type="text" class="form-control" style="font-size: 20px" placeholder="@Localizer["String1"]" aria-label="Search" name="keyword" value="@ViewBag.keyword">
+                <input type="search"  class="form-control" style="font-size: 20px" placeholder="@Localizer["String1"]" aria-label="Search" name="keyword" value="@ViewBag.keyword">
             </div>
             <div class="col-5" id="app">
-                <select type="text" class="form-control" style="font-size: 20px" v-model="selectedCity" name="selectedCity" >
+                <select type="text" class="form-control " style="font-size: 20px" v-model="selectedCity" name="selectedCity">
+                    <option value="" disabled selected>
+                        @Localizer["String2"]
+                    </option>
                     <option v-for="city in cities" v-bind:value="city">
                         {{city}}
                     </option>
@@ -72,7 +75,7 @@
                     <img class="d-none d-sm-block " src="~/img/house.png" />
                 </div>
                 <div class="col-10">
-                    <a href=""> Недвижимость</a>
+                    <a asp-action="SearchByCategory" asp-route-keyword="Недвижимость"> Недвижимость</a>
                 </div>
             </div>
         </div>
@@ -82,7 +85,7 @@
                     <img class="d-none d-sm-block" src="~/img/car.png" />
                 </div>
                 <div class="col-10">
-                    <a href=""> Транспорт</a>
+                    <a asp-action="SearchByCategory" asp-route-keyword="Транспорт"> Транспорт</a>
                 </div>
             </div>
         </div>
@@ -92,7 +95,7 @@
                     <img class="d-none d-sm-block m-1" src="~/img/work.png" />
                 </div>
                 <div class="col-10 d-flex">
-                    <a href="">Работа</a>
+                    <a asp-action="SearchByCategory" asp-route-keyword="Работа">Работа</a>
                 </div>
             </div>
         </div>
@@ -104,7 +107,7 @@
                     <img class="d-none d-sm-block m-1 " src="~/img/animal.png" />
                 </div>
                 <div class="col-10 ">
-                    <a href=""> Животные</a>
+                    <a asp-action="SearchByCategory" asp-route-keyword="Животные"> Животные</a>
                 </div>
             </div>
         </div>
@@ -114,7 +117,7 @@
                     <img class="d-none d-sm-block" src="~/img/tv.png" />
                 </div>
                 <div class="col-10 ">
-                    <a href="">Электроника</a>
+                    <a asp-action="SearchByCategory" asp-route-keyword="Электроника">Электроника</a>
                 </div>
             </div>
         </div>
@@ -124,7 +127,7 @@
                     <img class="d-none d-sm-block m-1" src="~/img/ball.png" />
                 </div>
                 <div class="col-10 d-flex">
-                    <a href="">Спорт</a>
+                    <a asp-action="SearchByCategory" asp-route-keyword="Спорт">Спорт</a>
                 </div>
             </div>
         </div>
@@ -136,7 +139,7 @@
                     <img class="d-none d-sm-block " src="~/img/help.png" />
                 </div>
                 <div class="col-10">
-                    <a href="">Услуги</a>
+                    <a asp-action="SearchByCategory" asp-route-keyword="Услуги">Услуги</a>
                 </div>
             </div>
         </div>
@@ -146,7 +149,7 @@
                     <img class="d-none d-sm-block " src="~/img/T-short.png" />
                 </div>
                 <div class="col-10 d-flex">
-                    <a href="">Одежда</a>
+                    <a asp-action="SearchByCategory" asp-route-keyword="Одежда">Одежда</a>
                 </div>
             </div>
         </div>
@@ -156,7 +159,7 @@
                     <img class="d-none d-sm-block " src="~/img/boj.png" />
                 </div>
                 <div class="col-10 d-flex">
-                    <a href="">Дети</a>
+                    <a asp-action="SearchByCategory" asp-route-keyword="Дети">Дети</a>
                 </div>
             </div>
         </div>
@@ -168,7 +171,7 @@
                     <img class="d-none d-sm-block " src="~/img/workh.png" />
                 </div>
                 <div class="col-10 d-flex">
-                    <a href="">Запчасти</a>
+                    <a asp-action="SearchByCategory" asp-route-keyword="Запчасти">Запчасти</a>
                 </div>
             </div>
         </div>
@@ -178,7 +181,7 @@
                     <img class="d-none d-sm-block "src="~/img/change.png" /> 
                 </div>
                 <div class="col-10 d-flex">
-                    <a href="">Обмен</a>
+                    <a asp-action="SearchByCategory" asp-route-keyword="Обмен">Обмен</a>
                 </div>
             </div>
         </div>
@@ -188,7 +191,7 @@
                     <img class="d-none d-sm-block "src="~/img/surprize.png" />
                 </div>
                 <div class="col-10 d-flex ">
-                    <a href="">Подарю</a>
+                    <a asp-action="SearchByCategory" asp-route-keyword="Подарю">Подарю</a>
                 </div>
             </div>
         </div>
@@ -200,7 +203,7 @@
                     <img class="d-none d-sm-block "src="~/img/vacation.png" />
                 </div>
                 <div class="col-10 d-flex ">
-                    <a href="">Отдых</a>
+                    <a asp-action="SearchByCategory" asp-route-keyword="Отдых">Отдых</a>
                 </div>
             </div>
         </div>
@@ -210,7 +213,7 @@
                     <img class="d-none d-sm-block "src="~/img/business.png" />
                 </div>
                 <div class="col-10 d-flex ">
-                    <a href="">Бизнес</a>
+                    <a asp-action="SearchByCategory" asp-route-keyword="Бизнес">Бизнес</a>
                 </div>
             </div>
         </div>
@@ -283,7 +286,7 @@
             data: {
                 selectedCity: '',
                 cities: [
-                    '@Localizer["String2"]', 'Винница', 'Днепр', 'Донецк', 'Житомир', 'Запорожье', 'Ивано-Франковск', 'Киев', 'Кропивницкий', 'Луганск', 'Луцк', 'Львов', 'Николаев',
+                    'Винница', 'Днепр', 'Донецк', 'Житомир', 'Запорожье', 'Ивано-Франковск', 'Киев', 'Кропивницкий', 'Луганск', 'Луцк', 'Львов', 'Николаев',
                     'Одесса','Полтава','Ровно','Сумы','Тернополь','Ужгород','Харьков','Херсон','Хмельницкий','Черкассы','Чернигов','Черновцы'
                 ]
             }

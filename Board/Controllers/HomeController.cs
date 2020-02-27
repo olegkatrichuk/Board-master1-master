@@ -126,6 +126,7 @@ namespace MyBoard.Controllers
         {
             Advert advert = await _context.Adverts.FirstOrDefaultAsync(p => p.Id == id);
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             AdvertEditViewModel advertEditViewModel = new AdvertEditViewModel
             {
                 UserId = userId,
@@ -188,7 +189,7 @@ namespace MyBoard.Controllers
 
                 _context.Update(advert);
                 _context.SaveChanges();
-                return RedirectToAction("List", "Home");
+                return RedirectToAction("List", "Home", new { Id = advert.Id });
             }
 
             return View();
@@ -284,10 +285,12 @@ namespace MyBoard.Controllers
             }
             else
             {
+                City city = (City)System.Enum.Parse(typeof(City), selectedCity);
+
                 var result = _context.Adverts.OrderByDescending(x => x.DateStartTime);
                 int pageSize = 9;
-                
-                var product = result.Where(p => p.Title.Contains(keyword));
+
+                var product = result.Where(p => p.Title.Contains(keyword)).Where(p => p.City == city);
 
                 var count = await product.CountAsync();
                 var items = await product.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
@@ -297,8 +300,38 @@ namespace MyBoard.Controllers
                 {
                     PageViewModel = pageViewModel,
                     Adverts = items
-                }; 
+                };
                 ViewBag.citykeyword = selectedCity;
+                ViewBag.keyword = keyword;
+                return View(viewModel);
+
+            }
+        }
+
+        public async Task<IActionResult> SearchByCategory(string keyword, int page = 1)
+        {
+            if (keyword == null || keyword.Length < 3 || keyword.Length > 20)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                Categor category = (Categor)System.Enum.Parse(typeof(Categor), keyword);
+
+                var result = _context.Adverts.OrderByDescending(x => x.DateStartTime).Where(advert => advert.Category == category); ;
+
+                int pageSize = 9;
+
+                var count = await result.CountAsync();
+                var items = await result.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+                PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
+                IndexViewModel viewModel = new IndexViewModel
+                {
+                    PageViewModel = pageViewModel,
+                    Adverts = items
+                };
+
                 ViewBag.keyword = keyword;
                 return View(viewModel);
 

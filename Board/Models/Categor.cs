@@ -23,4 +23,5 @@ namespace Board.Models
     Отдых,
     Бизнес
   }
+
 }

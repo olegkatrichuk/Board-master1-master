@@ -11,7 +11,7 @@
 <h1>Мои обьявления</h1>
 
 <p>
-    <a asp-action="Create"></a>
+    <a asp-action="List"></a>
 </p>
 <table class="table">
     <thead>
@@ -68,7 +68,7 @@
                     <img class="rounded" src="@photoPath" asp-append-version="true" style="width: 100px; height: 100px" />
                 </td>
                 <td>
-                    @Html.ActionLink("Редактировать", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Редактировать", "Edit",Model) |
                     @Html.ActionLink("Детали", "Details", new { id = item.Id }) |
                     @Html.ActionLink("Удалить", "Delete", new { id = item.Id }) 
                     @*<a href='@Url.Action("ConvertToPdf", "Home")'>PDF</a>*@
