@@ -29,7 +29,7 @@ namespace Board.Migrations
                     b.Property<int?>("Category")
                         .HasColumnType("int");
 
-                    b.Property<int?>("City")
+                    b.Property<int?>("Citys")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateStartTime")

@@ -7,7 +7,7 @@ namespace Board.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<int>(
-                name: "City",
+                name: "Citys",
                 table: "Adverts",
                 nullable: true,
                 oldClrType: typeof(string),
@@ -18,7 +18,7 @@ namespace Board.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "City",
+                name: "Citys",
                 table: "Adverts",
                 type: "nvarchar(max)",
                 nullable: true,

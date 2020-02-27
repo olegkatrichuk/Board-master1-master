@@ -31,7 +31,7 @@ namespace Board.Migrations
                     b.Property<int?>("Category")
                         .HasColumnType("int");
 
-                    b.Property<string>("City")
+                    b.Property<string>("Citys")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateStartTime")

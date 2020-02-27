@@ -32,7 +32,7 @@ namespace Board.ViewModels
 
         public DateTime DateStart { get; set; }
 
-        public City? City { get; set; }
+        public City? Citis { get; set; }
 
         [Required]
         [Phone]

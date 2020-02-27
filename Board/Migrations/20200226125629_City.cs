@@ -7,7 +7,7 @@ namespace Board.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "City",
+                name: "Citys",
                 table: "Adverts",
                 nullable: true);
 
@@ -20,7 +20,7 @@ namespace Board.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "City",
+                name: "Citys",
                 table: "Adverts");
 
             migrationBuilder.DropColumn(

@@ -50,7 +50,7 @@
                 <input type="search"  class="form-control" style="font-size: 20px" placeholder="@Localizer["String1"]" aria-label="Search" name="keyword" value="@ViewBag.keyword">
             </div>
             <div class="col-5" id="app">
-                <select type="text" class="form-control " style="font-size: 20px" v-model="selectedCity" name="selectedCity">
+                <select type="text" class="form-control " style="font-size: 20px" v-model="selectedCitys" name="selectedCitys">
                     <option value="" disabled selected>
                         @Localizer["String2"]
                     </option>
@@ -58,7 +58,7 @@
                         {{city}}
                     </option>
                 </select>
-                <div class="d-none">@ViewBag.citykeyword = {{selectedCity}}</div>
+                <div class="d-none">@ViewBag.citykeyword = {{selectedCitys}}</div>
             </div>
             <div class="col-2">
                 <button type="submit" class="btn btn-primary " style="font-size: 20px;">@Localizer["String3"]</button>
@@ -284,7 +284,7 @@
         var app = new Vue({
             el: '#app',
             data: {
-                selectedCity: '',
+                selectedCitys: '',
                 cities: [
                     'Винница', 'Днепр', 'Донецк', 'Житомир', 'Запорожье', 'Ивано-Франковск', 'Киев', 'Кропивницкий', 'Луганск', 'Луцк', 'Львов', 'Николаев',
                     'Одесса','Полтава','Ровно','Сумы','Тернополь','Ужгород','Харьков','Херсон','Хмельницкий','Черкассы','Чернигов','Черновцы'

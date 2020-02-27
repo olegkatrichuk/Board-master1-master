@@ -8,46 +8,58 @@
 
 <h1>Детали вашего обьявления</h1>
 
-<div>
+<div class="container">
 
     <hr />
     <dl class="row">
 
         <dt class="col-sm-2">
-            <label asp-for="Title" class="col-sm-2 control-label">Заголовок</label>
+            <label asp-for="Title" class="col-sm-2 control-label text-left">Заголовок</label>
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Title)
         </dd>
         <dt class="col-sm-2">
-            <label asp-for="Category" class="col-sm-4 control-label">Категория</label>
+            <label asp-for="Category" class="col-sm-4 control-label text-left">Категория</label>
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Category)
         </dd>
         <dt class="col-sm-2">
-            <label asp-for="ProductIsNew" class="control-label col-sm-4">Товар</label>
+            <label asp-for="ProductIsNew" class="control-label col-sm-4 text-left">Товар</label>
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ProductIsNew)
         </dd>
         <dt class="col-sm-2">
-            <label asp-for="Price" class="control-label col-sm-2">Цена</label>
+            <label asp-for="Price" class="control-label col-sm-2 text-left">Цена</label>
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Price)
         </dd>
         <dt class="col-sm-2">
-            <label asp-for="IsNegotiatedPrice" class="control-label">Договорная цена</label>
+            <label asp-for="IsNegotiatedPrice" class="control-label text-left">Договорная цена</label>
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.IsNegotiatedPrice)
         </dd>
         <dt class="col-sm-2">
-            <label asp-for="Description" class="control-label">Описание</label>
+            <label asp-for="Description" class="control-label text-left">Описание</label>
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class="col-sm-2">
+            <label asp-for="City" class="control-label text-left ">Город</label>
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.City)
+        </dd>
+        <dt class="col-sm-2">
+            <label asp-for="Phone" class="control-label text-left">Телефон</label>
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Phone)
         </dd>
         <dd>
             <img class="rounded" src="@photoPath" asp-append-version="true" title="НЕТ КАРТИНКИ" style="width: 200px; height: 200px" />

@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Board.Models;
-using MyBoard.Models;
 
 namespace Board.ViewModels
 {
@@ -25,8 +24,6 @@ namespace Board.ViewModels
     public string PhotoPath { get; set; }
 
     public DataType DataStart { get; set; }
-
-    public City? City { get; set; }
 
     [Phone]
     public string Phone { get; set; }

@@ -54,7 +54,7 @@ namespace MyBoard.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var query = await _context.Adverts.Where(x => x.UserId == userId).ToListAsync();
-
+            query.Reverse();
             return View(query);
         }
 
@@ -85,7 +85,7 @@ namespace MyBoard.Controllers
                     Description = model.Description,
                     PhotoPath = uniqueFileName,
                     DateStartTime = DateTime.Now,
-                    City = model.City,
+                    City = model.Citis,
                     Phone = model.Phone
                 };
 
@@ -126,7 +126,7 @@ namespace MyBoard.Controllers
         {
             Advert advert = await _context.Adverts.FirstOrDefaultAsync(p => p.Id == id);
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
+           
             AdvertEditViewModel advertEditViewModel = new AdvertEditViewModel
             {
                 UserId = userId,
@@ -137,7 +137,10 @@ namespace MyBoard.Controllers
                 Price = advert.Price,
                 IsNegotiatedPrice = advert.IsNegotiatedPrice,
                 Description = advert.Description,
-                ExistingPhotoPath = advert.PhotoPath
+                ExistingPhotoPath = advert.PhotoPath,
+                DateStart = DateTime.Now,
+                Citis = advert.City,
+                Phone = advert.Phone
             };
 
             return View(advertEditViewModel);
@@ -165,6 +168,7 @@ namespace MyBoard.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(AdvertEditViewModel model)
         {
+
             if (ModelState.IsValid)
             {
                 Advert advert = await _context.Adverts.FirstOrDefaultAsync(p => p.Id == model.Id);
@@ -176,6 +180,9 @@ namespace MyBoard.Controllers
                 advert.IsNegotiatedPrice = model.IsNegotiatedPrice;
                 advert.Description = model.Description;
                 advert.UserId = userId;
+                advert.DateStartTime = DateTime.Now;
+                advert.City = model.Citis;
+                advert.Phone = model.Phone;
 
                 if (model.Photos != null)
                 {
@@ -277,7 +284,7 @@ namespace MyBoard.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Search(string keyword, string selectedCity, int page = 1)
+        public async Task<IActionResult> Search(string keyword, string selectedCitys, int page = 1)
         {
             if (keyword == null || keyword.Length < 3 || keyword.Length > 20)
             {
@@ -285,7 +292,7 @@ namespace MyBoard.Controllers
             }
             else
             {
-                City city = (City)System.Enum.Parse(typeof(City), selectedCity);
+                City city = (City)System.Enum.Parse(typeof(City), selectedCitys);
 
                 var result = _context.Adverts.OrderByDescending(x => x.DateStartTime);
                 int pageSize = 9;
@@ -301,7 +308,7 @@ namespace MyBoard.Controllers
                     PageViewModel = pageViewModel,
                     Adverts = items
                 };
-                ViewBag.citykeyword = selectedCity;
+                ViewBag.citykeyword = selectedCitys;
                 ViewBag.keyword = keyword;
                 return View(viewModel);
 
