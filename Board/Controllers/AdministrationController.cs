@@ -352,7 +352,6 @@ namespace MyBoard.Controllers
     }
 
     [HttpPost]
-    
     public async Task<IActionResult> EditRole(EditRoleViewModel model)
     {
       var role = await _roleManager.FindByIdAsync(model.Id);
@@ -425,33 +424,12 @@ namespace MyBoard.Controllers
         return View("NotFound");
       }
 
-      for (int i = 0; i < model.Count; i++)
+      for (int i = 0; i < model.Count; )
       {
         var user = await _userManager.FindByIdAsync(model[i].UserId);
 
         IdentityResult result = null;
-        if (result == null) throw new ArgumentNullException(nameof(result));
-
-        if (model[i].IsSelected && !(await _userManager.IsInRoleAsync(user, role.Name)))
-        {
-          result = await _userManager.AddToRoleAsync(user, role.Name);
-        }
-        else if (!model[i].IsSelected && await _userManager.IsInRoleAsync(user, role.Name))
-        {
-          result = await _userManager.RemoveFromRoleAsync(user, role.Name);
-        }
-        else
-        {
-          continue;
-        }
-
-        if (result.Succeeded)
-        {
-          if (i < (model.Count - 1))
-            continue;
-          else
-            return RedirectToAction("EditRole", new { Id = roleId });
-        }
+        throw new ArgumentNullException(nameof(result));
       }
       return RedirectToAction("EditRole", new { Id = roleId });
     }

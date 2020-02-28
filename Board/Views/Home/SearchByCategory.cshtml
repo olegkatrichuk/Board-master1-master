@@ -23,12 +23,14 @@
             </div>
             <div class="card-inner">
                 <div class="header">
-                    <h2>@item.Title</h2>
+                    <h2 style="white-space: nowrap; overflow: hidden;">@item.Title</h2>
                     <h2>
                         @item.Price
                     </h2>
                 </div>
-
+                <div class="row card-footer justify-content-center">
+                    <a asp-controller="Home" asp-action="DetailsAdvert" asp-route-id="@item.Id" class="btn btn-info">подробнее</a>
+                </div>
             </div>
         </div>
 

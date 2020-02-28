@@ -96,8 +96,19 @@ namespace MyBoard.Controllers
 
             return View();
         }
-
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
+        {
+            if (id != null)
+            {
+                Advert advert = await _context.Adverts.FirstOrDefaultAsync(p => p.Id == id);
+                if (advert != null)
+                    return View(advert);
+            }
+            return NotFound();
+        }
+        [AllowAnonymous]
+        public async Task<IActionResult> DetailsAdvert(int? id)
         {
             if (id != null)
             {
@@ -286,33 +297,34 @@ namespace MyBoard.Controllers
         [HttpPost]
         public async Task<IActionResult> Search(string keyword, string selectedCitys, int page = 1)
         {
+            if (selectedCitys == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             if (keyword == null || keyword.Length < 3 || keyword.Length > 20)
             {
                 return RedirectToAction("Index", "Home");
             }
-            else
+
+            City city = (City)System.Enum.Parse(typeof(City), selectedCitys);
+
+            var result = _context.Adverts.OrderByDescending(x => x.DateStartTime);
+            int pageSize = 9;
+
+            var product = result.Where(p => p.Title.Contains(keyword)).Where(p => p.City == city);
+
+            var count = await product.CountAsync();
+            var items = await product.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
+            IndexViewModel viewModel = new IndexViewModel
             {
-                City city = (City)System.Enum.Parse(typeof(City), selectedCitys);
-
-                var result = _context.Adverts.OrderByDescending(x => x.DateStartTime);
-                int pageSize = 9;
-
-                var product = result.Where(p => p.Title.Contains(keyword)).Where(p => p.City == city);
-
-                var count = await product.CountAsync();
-                var items = await product.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
-
-                PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
-                IndexViewModel viewModel = new IndexViewModel
-                {
-                    PageViewModel = pageViewModel,
-                    Adverts = items
-                };
-                ViewBag.citykeyword = selectedCitys;
-                ViewBag.keyword = keyword;
-                return View(viewModel);
-
-            }
+                PageViewModel = pageViewModel,
+                Adverts = items
+            };
+            ViewBag.citykeyword = selectedCitys;
+            ViewBag.keyword = keyword;
+            return View(viewModel);
         }
 
         public async Task<IActionResult> SearchByCategory(string keyword, int page = 1)

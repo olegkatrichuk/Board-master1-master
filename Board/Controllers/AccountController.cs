@@ -227,9 +227,6 @@ namespace MyBoard.Controllers
                 Console.WriteLine(e);
                 throw;
             }
-
-
-
         }
 
         [HttpPost]
