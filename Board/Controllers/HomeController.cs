@@ -24,6 +24,7 @@ namespace MyBoard.Controllers
         private readonly IWebHostEnvironment _hostEnvironment;
         private readonly AppDbContext _context;
 
+       
         public HomeController(AppDbContext context, IWebHostEnvironment hostEnvironment)
         {
             _hostEnvironment = hostEnvironment;
@@ -33,6 +34,10 @@ namespace MyBoard.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index(int page = 1)
         {
+            Log logger = new Log(this , "Hello");
+            
+            logger.WriteToFile();
+
             var result = _context.Adverts.OrderByDescending(x => x.DateStartTime);
             int pageSize = 9;
 
@@ -137,7 +142,7 @@ namespace MyBoard.Controllers
         {
             Advert advert = await _context.Adverts.FirstOrDefaultAsync(p => p.Id == id);
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-           
+
             AdvertEditViewModel advertEditViewModel = new AdvertEditViewModel
             {
                 UserId = userId,
