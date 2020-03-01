@@ -426,9 +426,10 @@ namespace MyBoard.Controllers
 
       for (int i = 0; i < model.Count; )
       {
-        var user = await _userManager.FindByIdAsync(model[i].UserId);
+        await _userManager.FindByIdAsync(model[i].UserId);
 
         IdentityResult result = null;
+        if (result == null) throw new ArgumentNullException(nameof(result));
         throw new ArgumentNullException(nameof(result));
       }
       return RedirectToAction("EditRole", new { Id = roleId });
