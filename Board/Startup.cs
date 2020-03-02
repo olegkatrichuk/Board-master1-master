@@ -32,6 +32,8 @@ namespace MyBoard
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddLocalization(options => options.ResourcesPath = "Resources");
+      services.AddRazorPages();
+      services.AddMvc();
 
       services.AddMvc()
         .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)

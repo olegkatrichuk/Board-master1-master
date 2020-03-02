@@ -43,5 +43,15 @@ namespace MyBoard
             var array = System.Text.Encoding.Default.GetBytes(str);
             filestream.Write(array, 0, array.Length);
         }
+
+        public void GetAllMethodsInFile(object o)
+        {
+            Type p = o.GetType();
+            using StreamWriter sw = new StreamWriter("D:/methods.txt");
+            foreach (MethodInfo item in p.GetMethods())
+            {
+                sw.WriteLine(item.Name);
+            }
+        }
     }
 }

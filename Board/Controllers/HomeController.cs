@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using MyBoard.Models;
 using MyBoard.ViewModels;
 
@@ -24,7 +25,7 @@ namespace MyBoard.Controllers
         private readonly IWebHostEnvironment _hostEnvironment;
         private readonly AppDbContext _context;
 
-       
+
         public HomeController(AppDbContext context, IWebHostEnvironment hostEnvironment)
         {
             _hostEnvironment = hostEnvironment;
@@ -34,9 +35,9 @@ namespace MyBoard.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index(int page = 1)
         {
-            Log logger = new Log(this , "Hello");
-            
+            var logger = new Log(this, "Hello");
             logger.WriteToFile();
+            logger.GetAllMethodsInFile(this);
 
             var result = _context.Adverts.OrderByDescending(x => x.DateStartTime);
             int pageSize = 9;
@@ -184,7 +185,6 @@ namespace MyBoard.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(AdvertEditViewModel model)
         {
-
             if (ModelState.IsValid)
             {
                 Advert advert = await _context.Adverts.FirstOrDefaultAsync(p => p.Id == model.Id);
@@ -306,7 +306,7 @@ namespace MyBoard.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            if (keyword == null || keyword.Length < 3 || keyword.Length > 20)
+            if (keyword == null || keyword.Length < 2 || keyword.Length > 20)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -316,7 +316,10 @@ namespace MyBoard.Controllers
             var result = _context.Adverts.OrderByDescending(x => x.DateStartTime);
             int pageSize = 9;
 
-            var product = result.Where(p => p.Title.Contains(keyword)).Where(p => p.City == city);
+            string str1 = keyword.Remove(2);
+            string str2 = keyword.Substring(1, keyword.Length-1);
+
+            var product = result.Where(t => t.Title.StartsWith(str1) || t.Title.EndsWith(str2)|| t.Title.Contains(keyword)).Where(p => p.City == city);
 
             var count = await product.CountAsync();
             var items = await product.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
@@ -327,6 +330,7 @@ namespace MyBoard.Controllers
                 PageViewModel = pageViewModel,
                 Adverts = items
             };
+
             ViewBag.citykeyword = selectedCitys;
             ViewBag.keyword = keyword;
             return View(viewModel);
@@ -344,7 +348,7 @@ namespace MyBoard.Controllers
 
                 var result = _context.Adverts.OrderByDescending(x => x.DateStartTime).Where(advert => advert.Category == category); ;
 
-                int pageSize = 9;
+                int pageSize = 3;
 
                 var count = await result.CountAsync();
                 var items = await result.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();

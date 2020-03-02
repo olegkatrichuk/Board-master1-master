@@ -33,15 +33,15 @@
 </style>
 
 @*<div>
-    <link href="https://fonts.googleapis.com/css?family=Raleway:200,100,400" rel="stylesheet" type="text/css" />
-    <h1 class="text-center text-info">
-        Хотите
-        <span class="txt-rotate"
-              data-period="2000"
-              data-rotate='[ " продать...", "купить...", "подарить...", "обменять...", "или еще что нибудь..." ]'></span>
-    </h1>
-    <h2 class="text-center text-dark ">Мы с радостью поможем в этом вам.</h2>
-</div>*@
+        <link href="https://fonts.googleapis.com/css?family=Raleway:200,100,400" rel="stylesheet" type="text/css" />
+        <h1 class="text-center text-info">
+            Хотите
+            <span class="txt-rotate"
+                  data-period="2000"
+                  data-rotate='[ " продать...", "купить...", "подарить...", "обменять...", "или еще что нибудь..." ]'></span>
+        </h1>
+        <h2 class="text-center text-dark ">Мы с радостью поможем в этом вам.</h2>
+    </div>*@
 
 <div class="container mt-4 p-4 rounded" style="background: bisque">
     <form asp-action="Search" asp-controller="Home" method="post">
@@ -251,26 +251,71 @@
     }
 </div>
 <hr />
-<div class="text-xl-center">
-    @if (Model.PageViewModel.HasPreviousPage)
-    {
-        <a asp-action="Index"
-           asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
-           class="btn btn-outline-primary">
-            <i class="glyphicon glyphicon-chevron-left"></i>
-            Назад
-        </a>
-    }
-    @if (Model.PageViewModel.HasNextPage)
-    {
-        <a asp-action="Index"
-           asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
-           class="btn btn-outline-primary">
-            Вперед
-            <i class="glyphicon glyphicon-chevron-right"></i>
-        </a>
-    }
-</div>
+
+<nav aria-label="Page navigation example text-xl-center">
+    <ul class="pagination">
+        <li class="page-item">
+            @{ var number = Model.PageViewModel.PageNumber; }
+            @if (Model.PageViewModel.HasPreviousPage)
+            {
+                <a asp-action="Index"
+                   asp-route-page="@(number - 1)"
+                   class="btn btn-outline-primary">
+                    <i class="glyphicon glyphicon-chevron-left"></i>
+                    Назад
+                </a>
+            }
+        </li>
+        <li class="page-item">
+          
+                <a asp-action="Index"
+                   asp-route-page="@(Model.PageViewModel.PageNumber-1)"
+                   class="btn btn-outline-primary">
+                    1
+                </a>
+            
+        </li>
+        <li class="page-item">
+            
+                <a asp-action="Index"
+                   asp-route-page="@(number + 9)"
+                   class="btn btn-outline-primary">
+                    2
+                </a>
+            
+        </li>
+        <li class="page-item">
+            
+                <a asp-action="Index"
+                   asp-route-page="@(number + 1)"
+                   class="btn btn-outline-primary">
+                    3
+                </a>
+            
+        </li>
+        <li class="page-item">
+            
+                <a asp-action="Index"
+                   asp-route-page="@(number + 1)"
+                   class="btn btn-outline-primary">
+                    4
+                </a>
+            
+        </li>
+        <li class="page-item">
+            @if (Model.PageViewModel.HasNextPage)
+            {
+                <a asp-action="Index"
+                   asp-route-page="@(number + 1)"
+                   class="btn btn-outline-primary">
+                    Вперед
+                    <i class="glyphicon glyphicon-chevron-right"></i>
+                </a>
+            }
+        </li>
+    </ul>
+</nav>
+
 @section Scripts
 {
 
