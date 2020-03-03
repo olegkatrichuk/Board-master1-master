@@ -33,7 +33,7 @@ namespace MyBoard
     {
       services.AddLocalization(options => options.ResourcesPath = "Resources");
       services.AddRazorPages();
-      services.AddMvc();
+      services.AddCloudscribePagination();
 
       services.AddMvc()
         .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)

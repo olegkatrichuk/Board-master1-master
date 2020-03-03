@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using MyBoard.Models;
 using MyBoard.ViewModels;
+using cloudscribe.Pagination.Models;
 
 namespace MyBoard.Controllers
 {
@@ -33,25 +34,34 @@ namespace MyBoard.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> Index(int page = 1)
+        public IActionResult Index(int pageNumber = 1, int size = 9)
         {
-            var logger = new Log(this, "Hello");
-            logger.WriteToFile();
-            logger.GetAllMethodsInFile(this);
+            //var logger = new Log(this, "Hello");
+            //logger.WriteToFile();
+           
+            int excludeRecords = (size * pageNumber) - size;
 
-            var result = _context.Adverts.OrderByDescending(x => x.DateStartTime);
-            int pageSize = 9;
-
-            var count = await result.CountAsync();
-            var items = await result.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
-
-            PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
-            IndexViewModel viewModel = new IndexViewModel
+            var result = _context.Adverts.OrderByDescending(x => x.DateStartTime).Skip(excludeRecords).Take(size);
+          
+            var res = new PagedResult<Advert>
             {
-                PageViewModel = pageViewModel,
-                Adverts = items
+                Data = result.AsNoTracking().ToList(),
+                TotalItems = _context.Adverts.Count(),
+                PageNumber = pageNumber,
+                PageSize = size
             };
-            return View(viewModel);
+
+            // int pageSize = 9;
+            //var count = await result.CountAsync();
+            //var items = await result.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            //PageViewModel pageViewModel = new PageViewModel(count, pageNumber, pageSize);
+            //IndexViewModel viewModel = new IndexViewModel
+            //{
+            //    PageViewModel = pageViewModel,
+            //    Adverts = items
+            //};
+            return View(res);
         }
 
         [Authorize]
@@ -317,9 +327,9 @@ namespace MyBoard.Controllers
             int pageSize = 9;
 
             string str1 = keyword.Remove(2);
-            string str2 = keyword.Substring(1, keyword.Length-1);
+            string str2 = keyword.Substring(1, keyword.Length - 1);
 
-            var product = result.Where(t => t.Title.StartsWith(str1) || t.Title.EndsWith(str2)|| t.Title.Contains(keyword)).Where(p => p.City == city);
+            var product = result.Where(t => t.Title.StartsWith(str1) || t.Title.EndsWith(str2) || t.Title.Contains(keyword)).Where(p => p.City == city);
 
             var count = await product.CountAsync();
             var items = await product.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();

@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
-@using Board.Models
-@model MyBoard.Models.IndexViewModel
+
+@model cloudscribe.Pagination.Models.PagedResult<Advert>
 @inject IViewLocalizer Localizer
 @{
     ViewData["Title"] = "Home Page";
@@ -58,7 +58,6 @@
                         {{city}}
                     </option>
                 </select>
-                @* <div class="d-none">@ViewBag.citykeyword = {{selectedCitys}}</div>*@
             </div>
             <div class="col-2">
                 <button type="submit" class="btn btn-primary " style="font-size: 20px;">@Localizer["String3"]</button>
@@ -223,7 +222,7 @@
 
 <div class="container  align-self-center " style="display: flex">
     @{ int i = 3;}
-    @foreach (var item in Model.Adverts)
+    @foreach (var item in Model.Data)
     {
 
         if (i > 0 && i % 3 == 0)
@@ -249,72 +248,23 @@
         </div>
         i++;
     }
+
 </div>
 <hr />
-
-<nav aria-label="Page navigation example text-xl-center">
-    <ul class="pagination">
-        <li class="page-item">
-            @{ var number = Model.PageViewModel.PageNumber; }
-            @if (Model.PageViewModel.HasPreviousPage)
-            {
-                <a asp-action="Index"
-                   asp-route-page="@(number - 1)"
-                   class="btn btn-outline-primary">
-                    <i class="glyphicon glyphicon-chevron-left"></i>
-                    Назад
-                </a>
-            }
-        </li>
-        <li class="page-item">
-          
-                <a asp-action="Index"
-                   asp-route-page="@(Model.PageViewModel.PageNumber-1)"
-                   class="btn btn-outline-primary">
-                    1
-                </a>
-            
-        </li>
-        <li class="page-item">
-            
-                <a asp-action="Index"
-                   asp-route-page="@(number + 9)"
-                   class="btn btn-outline-primary">
-                    2
-                </a>
-            
-        </li>
-        <li class="page-item">
-            
-                <a asp-action="Index"
-                   asp-route-page="@(number + 1)"
-                   class="btn btn-outline-primary">
-                    3
-                </a>
-            
-        </li>
-        <li class="page-item">
-            
-                <a asp-action="Index"
-                   asp-route-page="@(number + 1)"
-                   class="btn btn-outline-primary">
-                    4
-                </a>
-            
-        </li>
-        <li class="page-item">
-            @if (Model.PageViewModel.HasNextPage)
-            {
-                <a asp-action="Index"
-                   asp-route-page="@(number + 1)"
-                   class="btn btn-outline-primary">
-                    Вперед
-                    <i class="glyphicon glyphicon-chevron-right"></i>
-                </a>
-            }
-        </li>
-    </ul>
-</nav>
+<div class="container">
+    <cs-pager cs-paging-pagenumber=(int)@Model.PageNumber
+              cs-paging-totalitems=(int)Model.TotalItems
+              cs-paging-pagesize=@Model.PageSize
+              cs-pagenumber-param="pagenumber"
+              asp-controller="Home"
+              asp-action="Index"
+              cs-pager-li-current-class="page-item active"
+              cs-pager-li-other-class="page-item"
+              cs-pager-li-non-active-class="page-item disabled"
+              cs-pager-link-current-class="page-link"
+              cs-pager-link-other-class="page-link">
+    </cs-pager>
+</div>
 
 @section Scripts
 {

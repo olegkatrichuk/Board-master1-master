@@ -2,102 +2,76 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MyBoard;
+using System.IO.Compression;
+using Microsoft.AspNetCore.Hosting;
 
 namespace MyBoard
 {
-    class GetUrl
+
+    public class Product
     {
-        public string GetMyUrl { get; set; }
-    }
-
-    class OutUrl
-    {
-        public string OutMyUrl { get; set; }
-    }
-
-    class GetUnicName
-    {
-        public string Name { get; }
-    }
-
-    class Service
-    {
-        public GetUrl GetUrl { get; set; }
-        public OutUrl OutUrl { get; set; }
-        public GetUnicName GetUnicName { get; set; }
-
-        public void GetResult()
-        {
-
-        }
-
+        public string GetUrl { get; set; }
+        public string OutUrl { get; set; }
+        public string GetUnicName { get; set; }
 
     }
 
-    abstract class PhotoServiceBilder
+    public abstract class PhotoServiceBilder
     {
-        public Service Service { get;  private set; }
-
-        public void CreatePhotoServiceBilder()
-        {
-            Service = new Service();
-        }
-
         public abstract void SetGetUrl();
         public abstract void SetOutUrl();
         public abstract void SetUnicName();
+        public abstract Product GetResult();
+
     }
-
-    class PhotoService
-    {
-        public Service Result(PhotoServiceBilder photoServiceBilder)
-        {
-            photoServiceBilder.SetUnicName();
-            photoServiceBilder.SetGetUrl();
-            photoServiceBilder.SetOutUrl();
-            photoServiceBilder.CreatePhotoServiceBilder();
-
-            return photoServiceBilder.Service;
-        }
-    }
-
-
-
 
     class OneBuilder : PhotoServiceBilder
     {
+        readonly Product _product = new Product();
+
         public override void SetGetUrl()
         {
-            
+            _product.GetUrl = @"D:\Example\BoardLast\Board\wwwroot\images\";
         }
-
-        public override void SetOutUrl()
-        {
-            
-        }
-
         public override void SetUnicName()
         {
-            
+            _product.GetUnicName = $"{System.Guid.NewGuid()}.zip";
         }
-    }
-
-    class TwoBilder : PhotoServiceBilder
-    {
-        public override void SetGetUrl()
-        {
-           
-        }
-
         public override void SetOutUrl()
         {
-           
+            _product.OutUrl = @"D:\" + _product.GetUnicName;
         }
-
-        public override void SetUnicName()
+        public override Product GetResult()
         {
-            
+            return _product;
         }
-    }
 
+    }
 }
+
+class TwoBilder : PhotoServiceBilder
+{
+    readonly Product _product = new Product();
+    public override void SetGetUrl()
+    {
+        _product.GetUrl = @"D:\Example\BoardLast\Board\wwwroot\picture\";
+    }
+
+    public override void SetOutUrl()
+    {
+        _product.OutUrl = @"D:\" + _product.GetUnicName;
+    }
+
+    public override void SetUnicName()
+    {
+        _product.GetUnicName = $"{System.Guid.NewGuid()}.zip";
+    }
+
+    public override Product GetResult()
+    {
+        return _product;
+    }
+}
+
+
