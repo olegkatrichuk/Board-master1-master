@@ -137,4 +137,8 @@
     <value>Мои обьявления</value>
     <comment>Мои обьявления</comment>
   </data>
+  <data name="Message5" xml:space="preserve">
+    <value>Выберите язык</value>
+    <comment>Выберите язык</comment>
+  </data>
 </root>

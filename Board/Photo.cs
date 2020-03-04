@@ -8,11 +8,11 @@ namespace MyBoard
 {
     public class Photo
     {
-        public void Construct(PhotoServiceBilder photoServiceBilder)
+        public void Construct(ConfigBuilder configBuilder)
         {
-            photoServiceBilder.SetUnicName();
-            photoServiceBilder.SetGetUrl();
-            photoServiceBilder.SetOutUrl();
+            configBuilder.SetUnicName();
+            configBuilder.SetGetUrl();
+            configBuilder.SetOutUrl();
         }
 
     }

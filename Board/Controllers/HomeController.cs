@@ -51,16 +51,7 @@ namespace MyBoard.Controllers
                 PageSize = size
             };
 
-            // int pageSize = 9;
-            //var count = await result.CountAsync();
-            //var items = await result.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
-
-            //PageViewModel pageViewModel = new PageViewModel(count, pageNumber, pageSize);
-            //IndexViewModel viewModel = new IndexViewModel
-            //{
-            //    PageViewModel = pageViewModel,
-            //    Adverts = items
-            //};
+           
             return View(res);
         }
 
@@ -87,7 +78,15 @@ namespace MyBoard.Controllers
         {
             if (ModelState.IsValid)
             {
-                string uniqueFileName = ProcessUploadedFile(model);
+                //string uniqueFileName = ProcessUploadedFile(model);
+                string fileName = null;
+                foreach (var photo in model.Photos)
+                {
+                    string uploadsFolder = @"D:/Test";
+                    var uniqueFileName = Guid.NewGuid() + "_" + photo.FileName;
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName); 
+                    fileName = photo.GetLinkToDownloadFile(filePath);
+                }
 
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 Advert newAdvert = new Advert
@@ -99,7 +98,7 @@ namespace MyBoard.Controllers
                     Price = model.Price,
                     IsNegotiatedPrice = model.IsNegotiatedPrice,
                     Description = model.Description,
-                    PhotoPath = uniqueFileName,
+                    PhotoPath = fileName,
                     DateStartTime = DateTime.Now,
                     City = model.Citis,
                     Phone = model.Phone
@@ -142,7 +141,13 @@ namespace MyBoard.Controllers
             Response.Cookies.Append(
               CookieRequestCultureProvider.DefaultCookieName,
               CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
-              new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+              new CookieOptions
+              {
+                  Expires = DateTimeOffset.UtcNow.AddYears(1),
+                  IsEssential = true,  
+                  Path = "/",
+                  HttpOnly = false,
+              }
             );
 
             return LocalRedirect(returnUrl);
@@ -310,7 +315,7 @@ namespace MyBoard.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Search(string keyword, string selectedCitys, int page = 1)
+        public async Task<IActionResult> Search(string keyword, string selectedCitys, int page = 1, int size = 9)
         {
             if (selectedCitys == null)
             {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,20 +9,15 @@ namespace MyBoard
 {
     public class MyService
     {
-
-        public void Show()
+        private ServiceConfig _serviceConfigServiceConfig;
+        public MyService(ServiceConfig serviceConfigServiceConfig)
         {
-            Photo ser = new Photo();
-
-            PhotoServiceBilder b1 = new OneBuilder();
-            ser.Construct(b1);
-            Product p = b1.GetResult();
-            ZipFile.CreateFromDirectory(p.GetUrl, p.OutUrl);
-
-            PhotoServiceBilder b2 = new TwoBilder();
-            ser.Construct(b2);
-            Product p2 = b2.GetResult();
-            ZipFile.CreateFromDirectory(p2.GetUrl, p2.OutUrl);
+            _serviceConfigServiceConfig = serviceConfigServiceConfig;
+        }
+        
+        public void CreateBackup()
+        {
+            ZipFile.CreateFromDirectory(_serviceConfigServiceConfig.GetUrl, _serviceConfigServiceConfig.OutUrl);
         }
     }
 }

@@ -9,68 +9,69 @@ using Microsoft.AspNetCore.Hosting;
 namespace MyBoard
 {
 
-    public class Product
+    public class ServiceConfig
     {
         public string GetUrl { get; set; }
         public string OutUrl { get; set; }
         public string GetUnicName { get; set; }
 
+       
     }
 
-    public abstract class PhotoServiceBilder
+    public abstract class ConfigBuilder
     {
         public abstract void SetGetUrl();
         public abstract void SetOutUrl();
         public abstract void SetUnicName();
-        public abstract Product GetResult();
+        public abstract ServiceConfig GetResult();
 
     }
 
-    class OneBuilder : PhotoServiceBilder
+    class LocalServiceConfigBuilder : ConfigBuilder
     {
-        readonly Product _product = new Product();
+        readonly ServiceConfig _serviceConfig = new ServiceConfig();
 
         public override void SetGetUrl()
         {
-            _product.GetUrl = @"D:\Example\BoardLast\Board\wwwroot\images\";
+            _serviceConfig.GetUrl = @"D:\Example\BoardLast\Board\wwwroot\images\";
         }
         public override void SetUnicName()
         {
-            _product.GetUnicName = $"{System.Guid.NewGuid()}.zip";
+            _serviceConfig.GetUnicName = $"{System.Guid.NewGuid()}.zip";
         }
         public override void SetOutUrl()
         {
-            _product.OutUrl = @"D:\" + _product.GetUnicName;
+            _serviceConfig.OutUrl = @"D:\" + _serviceConfig.GetUnicName;
         }
-        public override Product GetResult()
+        public override ServiceConfig GetResult()
         {
-            return _product;
+            return _serviceConfig;
         }
 
     }
 }
 
-class TwoBilder : PhotoServiceBilder
+class TwoBilder : ConfigBuilder
 {
-    readonly Product _product = new Product();
+    readonly ServiceConfig _serviceConfig = new ServiceConfig();
     public override void SetGetUrl()
     {
-        _product.GetUrl = @"D:\Example\BoardLast\Board\wwwroot\picture\";
+        _serviceConfig.GetUrl = @"D:\Example\BoardLast\Board\wwwroot\picture\";
     }
 
     public override void SetOutUrl()
     {
-        _product.OutUrl = @"D:\" + _product.GetUnicName;
+        _serviceConfig.OutUrl = @"D:\" + _serviceConfig.GetUnicName;
     }
 
     public override void SetUnicName()
     {
-        _product.GetUnicName = $"{System.Guid.NewGuid()}.zip";
+        _serviceConfig.GetUnicName = $"{System.Guid.NewGuid()}.zip";
     }
 
-    public override Product GetResult()
+    public override ServiceConfig GetResult()
     {
-        return _product;
+        return _serviceConfig;
     }
 }
 

@@ -23,8 +23,14 @@ namespace MyBoard.Controllers
 
         public IActionResult GenerateDowloadZip()
         {
-            MyService my = new MyService();
-            my.Show();
+            Photo ser = new Photo();
+
+            ConfigBuilder b1 = new LocalServiceConfigBuilder();
+            ser.Construct(b1);
+            ServiceConfig p = b1.GetResult();
+
+            MyService my = new MyService(p);
+            my.CreateBackup();
 
             return View();
         }
