@@ -36,7 +36,7 @@
                 @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PhotoPath)
+                @Html.DisplayNameFor(model => model.AdvertPhotos)
             </th>
             <th></th>
         </tr>
@@ -64,7 +64,7 @@
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
-                    @{ var photoPath = "~/images/" + (item.PhotoPath ?? "noimage.jpg");}
+                    @{ var photoPath = "~/images/" + (item.AdvertPhotos[0].PhotoPath ?? "noimage.jpg");}
                     <img class="rounded" src="@photoPath" asp-append-version="true" style="width: 100px; height: 100px" />
                 </td>
                 <td>

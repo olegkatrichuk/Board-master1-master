@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Board.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200226125629_City")]
-    partial class City
+    [Migration("20200305111518_Photo3")]
+    partial class Photo3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,8 +31,8 @@ namespace Board.Migrations
                     b.Property<int?>("Category")
                         .HasColumnType("int");
 
-                    b.Property<string>("Citys")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("Cities")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("DateStartTime")
                         .HasColumnType("datetime2");
@@ -43,10 +43,7 @@ namespace Board.Migrations
                     b.Property<bool>("IsNegotiatedPrice")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhotoPath")
+                    b.Property<string>("Phones")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Price")
@@ -271,6 +268,26 @@ namespace Board.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("MyBoard.Models.AdvertPhoto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AdvertId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PhotoPath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdvertId");
+
+                    b.ToTable("AdvertPhotos");
+                });
+
             modelBuilder.Entity("MyBoard.Models.User", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
@@ -333,6 +350,15 @@ namespace Board.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyBoard.Models.AdvertPhoto", b =>
+                {
+                    b.HasOne("Board.Models.Advert", "Advert")
+                        .WithMany("AdvertPhotos")
+                        .HasForeignKey("AdvertId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

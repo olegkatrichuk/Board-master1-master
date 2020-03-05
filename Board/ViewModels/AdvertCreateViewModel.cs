@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Board.Models;
 using Microsoft.AspNetCore.Http;
+using MyBoard.Models;
 using City = MyBoard.Models.City;
 
 namespace Board.ViewModels
@@ -29,7 +30,7 @@ namespace Board.ViewModels
 
         public DateTime DateStart { get; set; }
 
-        public City? Citis { get; set; }
+        public City? City { get; set; }
 
         [Required]
         [Phone]

@@ -33,12 +33,6 @@ namespace MyBoard
         {
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
-
-            services.AddMvc()
-                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-                .AddDataAnnotationsLocalization();
-                
-
             services.AddSession();
             services.AddRazorPages();
             services.AddCloudscribePagination();
@@ -51,11 +45,11 @@ namespace MyBoard
                     new CultureInfo("uk"),
                 };
 
-          options.DefaultRequestCulture = new RequestCulture("ru");
-          options.SupportedCultures = supportedCultures;
-          options.SupportedUICultures = supportedCultures;
+                options.DefaultRequestCulture = new RequestCulture("ru");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
 
-      });
+            });
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -121,7 +115,9 @@ namespace MyBoard
 
 
             services.AddControllersWithViews(options => { })
-                .AddNewtonsoftJson();
+                .AddNewtonsoftJson()
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                .AddDataAnnotationsLocalization();
 
             services.AddSingleton<IAuthorizationHandler, CanEditOnlyOtherAdminRolesAndClaimsHandler>();
             services.AddSingleton<IAuthorizationHandler, SuperAdminHandler>();
@@ -129,8 +125,6 @@ namespace MyBoard
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
-            app.UseRequestLocalization(locOptions.Value);
 
             if (env.IsDevelopment())
             {

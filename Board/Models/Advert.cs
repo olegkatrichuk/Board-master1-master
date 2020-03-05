@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using MyBoard.Models;
 
@@ -28,11 +29,12 @@ namespace Board.Models
         [Display(Name = "Описание")]
         public string Description { get; set; }
 
-        [Display(Name = "Фотография")]
-        public string PhotoPath { get; set; }
-
+        //[Display(Name = "Фотография")]
+        //public string PhotoPath { get; set; }
         public User User { get; set; }
 
+        [Display(Name = "Фотография")]
+        public List<AdvertPhoto> AdvertPhotos { get; set; }
         public string UserId { get; set; }
 
         [DataType(DataType.Date)]
@@ -40,10 +42,11 @@ namespace Board.Models
         public DateTime DateStartTime { get; set; }
 
         [Display(Name = "Город")]
-        public City? City { get; set; }
+        public City? Cities { get; set; }
 
         [Display(Name = "Телефон")]
         [Phone]
-        public string Phone { get; set; }
+        public string Phones { get; set; }
+
     }
 }

@@ -22,10 +22,10 @@
             </div>
         </div>
         <div class="form-group row">
-            <h4> <label asp-for="Citis" class="col-sm-4 control-label">Город</label></h4>
+            <h4> <label asp-for="City" class="col-sm-4 control-label">Город</label></h4>
             <div class="col-sm-8">
-                <select asp-for="Citis" style="width: 200px;height: 34px" asp-items="Html.GetEnumSelectList<City>()"></select>
-                <span asp-validation-for="Citis" class="text-danger"></span>
+                <select asp-for="City" style="width: 200px;height: 34px" asp-items="Html.GetEnumSelectList<City>()"></select>
+                <span asp-validation-for="City" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group row">

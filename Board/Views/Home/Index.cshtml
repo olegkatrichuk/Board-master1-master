@@ -1,4 +1,5 @@
-﻿@using Microsoft.AspNetCore.Mvc.Localization
+﻿@using Microsoft.AspNetCore.Hosting.Server.Features
+@using Microsoft.AspNetCore.Mvc.Localization
 
 @model cloudscribe.Pagination.Models.PagedResult<Advert>
 @inject IViewLocalizer Localizer
@@ -50,7 +51,7 @@
                 <input type="search" class="form-control" style="font-size: 20px" placeholder="@Localizer["String1"]" aria-label="Search" name="keyword" value="@ViewBag.keyword">
             </div>
             <div class="col-5" id="app">
-                <select type="text" class="form-control " style="font-size: 20px" v-model="selectedCitys" name="selectedCitys">
+                <select type="text" class="form-control " style="font-size: 20px" v-model="selectedCitiess" name="selectedCitiess">
                     <option value="" disabled selected>
                         @Localizer["String2"]
                     </option>
@@ -231,7 +232,7 @@
         }
         <div class="card p-3 m-3 " style="width: 21rem; ">
             <div class="card-img-top">
-                @{ var photoPath = "~/images/" + (item.PhotoPath ?? "noimage.jpg"); }
+                @{ var photoPath = "~/images/" + (item.AdvertPhotos[0].PhotoPath ?? "noimage.jpg"); }
                 <img class="rounded img-fluid" src="@photoPath" asp-append-version="true" style="max-width: 320px; max-height: 200px;" />
             </div>
             <div class="card-inner">

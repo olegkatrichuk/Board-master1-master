@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Board.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200226130733_Cities")]
-    partial class Cities
+    [Migration("20200305102626_Photo")]
+    partial class Photo
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,7 +31,7 @@ namespace Board.Migrations
                     b.Property<int?>("Category")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Citys")
+                    b.Property<int?>("Cities")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateStartTime")
@@ -43,10 +43,7 @@ namespace Board.Migrations
                     b.Property<bool>("IsNegotiatedPrice")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhotoPath")
+                    b.Property<string>("Phones")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Price")

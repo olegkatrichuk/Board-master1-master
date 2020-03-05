@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Delete";
-    var photoPath = "~/images/" + (Model.PhotoPath ?? "noimage.jpg");
+    var photoPath = "~/images/" + (Model.AdvertPhotos[0].PhotoPath ?? "noimage.jpg");
 }
 
 <h1 class="text-danger">Вы точно хотите удалить обьявление?</h1>

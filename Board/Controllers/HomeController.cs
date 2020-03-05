@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.IO;
@@ -21,365 +22,391 @@ using cloudscribe.Pagination.Models;
 
 namespace MyBoard.Controllers
 {
-  public class HomeController : Controller
-  {
-    private readonly IWebHostEnvironment _hostEnvironment;
-    private readonly AppDbContext _context;
-
-
-    public HomeController(AppDbContext context, IWebHostEnvironment hostEnvironment)
+    
+    public class HomeController : Controller
     {
-      _hostEnvironment = hostEnvironment;
-      _context = context;
-    }
-
-    [AllowAnonymous]
-    public IActionResult Index(int pageNumber = 1, int size = 9)
-    {
-      //var logger = new Log(this, "Hello");
-      //logger.WriteToFile();
-
-      int excludeRecords = (size * pageNumber) - size;
-
-      var result = _context.Adverts.OrderByDescending(x => x.DateStartTime).Skip(excludeRecords).Take(size);
-
-      var res = new PagedResult<Advert>
-      {
-        Data = result.AsNoTracking().ToList(),
-        TotalItems = _context.Adverts.Count(),
-        PageNumber = pageNumber,
-        PageSize = size
-      };
+        private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly AppDbContext _context;
 
 
-      return View(res);
-    }
-
-    [Authorize]
-    public async Task<IActionResult> List()
-    {
-      var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-      var query = await _context.Adverts.Where(x => x.UserId == userId).ToListAsync();
-      query.Reverse();
-      return View(query);
-    }
-
-    [HttpGet]
-    [Authorize]
-    public IActionResult Create()
-    {
-      return View();
-    }
-
-    [HttpPost]
-    [Authorize]
-    public IActionResult Create(AdvertCreateViewModel model)
-    {
-      if (ModelState.IsValid)
-      {
-        string fileName = null;
-        string uploadsFolder = Path.Combine(_hostEnvironment.WebRootPath, "images");
-
-        foreach (var photo in model.Photos)
+        public HomeController(AppDbContext context, IWebHostEnvironment hostEnvironment)
         {
-          fileName = photo.UploadImage(uploadsFolder);
+            _hostEnvironment = hostEnvironment;
+            _context = context;
         }
 
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        Advert newAdvert = new Advert
+        [AllowAnonymous]
+        public IActionResult Index(int pageNumber = 1, int size = 9)
         {
-          UserId = userId,
-          Title = model.Title,
-          Category = model.Category,
-          ProductIsNew = model.ProductIsNew,
-          Price = model.Price,
-          IsNegotiatedPrice = model.IsNegotiatedPrice,
-          Description = model.Description,
-          PhotoPath = fileName,
-          DateStartTime = DateTime.Now,
-          City = model.Citis,
-          Phone = model.Phone
-        };
+            //var logger = new Log(this, "Hello");
+            //logger.WriteToFile();
 
-        _context.Add(newAdvert);
-        _context.SaveChanges();
-        return RedirectToAction("Details", "Home", new {newAdvert.Id });
-      }
+            int excludeRecords = (size * pageNumber) - size;
 
-      return View();
-    }
-    [Authorize]
-    public async Task<IActionResult> Details(int? id)
-    {
-      if (id != null)
-      {
-        Advert advert = await _context.Adverts.FirstOrDefaultAsync(p => p.Id == id);
-        if (advert != null)
-          return View(advert);
-      }
-      return NotFound();
-    }
-    [AllowAnonymous]
-    public async Task<IActionResult> DetailsAdvert(int? id)
-    {
-      if (id != null)
-      {
-        Advert advert = await _context.Adverts.FirstOrDefaultAsync(p => p.Id == id);
-        if (advert != null)
-          return View(advert);
-      }
-      return NotFound();
-    }
+            var result = _context.Adverts.OrderByDescending(x => x.DateStartTime).Include(c => c.AdvertPhotos).Skip(excludeRecords).Take(size);
 
-    [HttpPost]
-    [AllowAnonymous]
-    public IActionResult SetLanguage(string culture, string returnUrl)
-    {
-      Response.Cookies.Append(
-        CookieRequestCultureProvider.DefaultCookieName,
-        CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
-        new CookieOptions
-        {
-          Expires = DateTimeOffset.UtcNow.AddYears(1),
-          IsEssential = true,
-          Path = "/",
-          HttpOnly = false,
-        }
-      );
+            var res = new PagedResult<Advert>
+            {
+                Data = result.AsNoTracking().ToList(),
+                TotalItems = _context.Adverts.Count(),
+                PageNumber = pageNumber,
+                PageSize = size
+            };
 
-      return LocalRedirect(returnUrl);
-    }
 
-    [HttpGet]
-    public async Task<IActionResult> Edit(int? id)
-    {
-      Advert advert = await _context.Adverts.FirstOrDefaultAsync(p => p.Id == id);
-      var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-      AdvertEditViewModel advertEditViewModel = new AdvertEditViewModel
-      {
-        UserId = userId,
-        Id = advert.Id,
-        Title = advert.Title,
-        Category = advert.Category,
-        ProductIsNew = advert.ProductIsNew,
-        Price = advert.Price,
-        IsNegotiatedPrice = advert.IsNegotiatedPrice,
-        Description = advert.Description,
-        ExistingPhotoPath = advert.PhotoPath,
-        DateStart = DateTime.Now,
-        Citis = advert.City,
-        Phone = advert.Phone
-      };
-
-      return View(advertEditViewModel);
-    }
-
-    private string ProcessUploadedFile(AdvertCreateViewModel model)
-    {
-      string uniqueFileName = null;
-      string uploadsFolder = Path.Combine(_hostEnvironment.WebRootPath, "images");
-
-      if (model.Photos != null && model.Photos.Count > 0)
-      {
-        foreach (IFormFile photo in model.Photos)
-        {
-          uniqueFileName = photo.UploadImage(uploadsFolder);
-          //string uploadsFolder = Path.Combine(_hostEnvironment.WebRootPath, "images");
-          //uniqueFileName = Guid.NewGuid() + "_" + photo.FileName;
-          //string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-          //using var fileStream = new FileStream(filePath, FileMode.Create);
-          //photo.CopyTo(fileStream);
+            return View(res);
         }
 
-      }
-
-      return uniqueFileName;
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Edit(AdvertEditViewModel model)
-    {
-      if (ModelState.IsValid)
-      {
-        Advert advert = await _context.Adverts.FirstOrDefaultAsync(p => p.Id == model.Id);
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        advert.Title = model.Title;
-        advert.Category = model.Category;
-        advert.ProductIsNew = model.ProductIsNew;
-        advert.Price = model.Price;
-        advert.IsNegotiatedPrice = model.IsNegotiatedPrice;
-        advert.Description = model.Description;
-        advert.UserId = userId;
-        advert.DateStartTime = DateTime.Now;
-        advert.City = model.Citis;
-        advert.Phone = model.Phone;
-
-        if (model.Photos != null)
+        [Authorize]
+        public async Task<IActionResult> List()
         {
-          if (model.ExistingPhotoPath != null)
-          {
-            string filePath = Path.Combine(_hostEnvironment.WebRootPath, "images", model.ExistingPhotoPath);
-            System.IO.File.Delete(filePath);
-          }
-          advert.PhotoPath = ProcessUploadedFile(model);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var query = await _context.Adverts.Include(c => c.AdvertPhotos).Where(x => x.UserId == userId).ToListAsync();
+            query.Reverse();
+            return View(query);
         }
 
-        _context.Update(advert);
-        _context.SaveChanges();
-        return RedirectToAction("List", "Home", new {advert.Id });
-      }
-
-      return View();
-    }
-
-    [HttpGet]
-    [ActionName("Delete")]
-    public async Task<IActionResult> ConfirmDelete(int? id)
-    {
-      if (id != null)
-      {
-        Advert advert = await _context.Adverts.FirstOrDefaultAsync(p => p.Id == id);
-        if (advert != null)
-          return View(advert);
-      }
-      return NotFound();
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Delete(int? id)
-    {
-      if (id != null)
-      {
-        Advert advert = await _context.Adverts.FirstOrDefaultAsync(p => p.Id == id);
-        if (advert != null)
+        [HttpGet]
+        [Authorize]
+        public IActionResult Create()
         {
-          _context.Adverts.Remove(advert);
-          await _context.SaveChangesAsync();
-          return RedirectToAction("List");
+            return View();
         }
-      }
-      return NotFound();
-    }
-    public IActionResult Privacy()
-    {
-      return View();
-    }
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-      return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
-
-    [Authorize]
-    [AcceptVerbs("Get", "Post")]
-    public IActionResult ConvertToPdf(string sourceUrl)
-    {
-      SelectPdf.HtmlToPdf converter = new SelectPdf.HtmlToPdf();
-      SelectPdf.PdfDocument doc = converter.ConvertUrl(sourceUrl);
-
-      MemoryStream ms = new MemoryStream();
-      doc.Save(ms);
-      doc.Close();
-
-      ms.Position = 0;
-
-      FileStreamResult fileStreamResult = new FileStreamResult(ms, "application/pdf")
-      {
-        FileDownloadName = "Advert.pdf"
-      };
-
-      return fileStreamResult;
-    }
-
-    [HttpGet]
-    public IActionResult ConvertToPdfAjax(string sourceUrl)
-    {
-
-      SelectPdf.HtmlToPdf converter = new SelectPdf.HtmlToPdf();
-      SelectPdf.PdfDocument doc = converter.ConvertUrl(sourceUrl);
-
-      MemoryStream ms = new MemoryStream();
-      doc.Save(ms);
-      doc.Close();
-
-      ms.Position = 0;
-
-      FileStreamResult fileStreamResult = new FileStreamResult(ms, "application/pdf")
-      {
-        FileDownloadName = "Advert.pdf"
-      };
-
-      return fileStreamResult;
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Search(string keyword, string selectedCitys, int page = 1)
-    {
-      if (selectedCitys == null)
-      {
-        return RedirectToAction("Index", "Home");
-      }
-      if (keyword == null || keyword.Length < 2 || keyword.Length > 20)
-      {
-        return RedirectToAction("Index", "Home");
-      }
-
-      City city = (City)System.Enum.Parse(typeof(City), selectedCitys);
-
-      var result = _context.Adverts.OrderByDescending(x => x.DateStartTime);
-      int pageSize = 9;
-
-      string str1 = keyword.Remove(2);
-      string str2 = keyword.Substring(1, keyword.Length - 1);
-
-      var product = result.Where(t => t.Title.StartsWith(str1) || t.Title.EndsWith(str2) || t.Title.Contains(keyword)).Where(p => p.City == city);
-
-      var count = await product.CountAsync();
-      var items = await product.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
-
-      PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
-      IndexViewModel viewModel = new IndexViewModel
-      {
-        PageViewModel = pageViewModel,
-        Adverts = items
-      };
-
-      ViewBag.citykeyword = selectedCitys;
-      ViewBag.keyword = keyword;
-      return View(viewModel);
-    }
-
-    public async Task<IActionResult> SearchByCategory(string keyword, int page = 1)
-    {
-      if (keyword == null || keyword.Length < 3 || keyword.Length > 20)
-      {
-        return RedirectToAction("Index", "Home");
-      }
-      else
-      {
-        Categor category = (Categor)System.Enum.Parse(typeof(Categor), keyword);
-
-        var result = _context.Adverts.OrderByDescending(x => x.DateStartTime).Where(advert => advert.Category == category); ;
-
-        int pageSize = 3;
-
-        var count = await result.CountAsync();
-        var items = await result.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
-
-        PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
-        IndexViewModel viewModel = new IndexViewModel
+        [HttpPost]
+        [Authorize]
+        public IActionResult Create(AdvertCreateViewModel model)
         {
-          PageViewModel = pageViewModel,
-          Adverts = items
-        };
+            if (ModelState.IsValid)
+            {
+                List<AdvertPhoto> listPath = new List<AdvertPhoto>();
+                string uploadsFolder = Path.Combine(_hostEnvironment.WebRootPath, "images");
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        ViewBag.keyword = keyword;
-        return View(viewModel);
+                Advert newAdvert = new Advert
+                {
+                    UserId = userId,
+                    Title = model.Title,
+                    Category = model.Category,
+                    ProductIsNew = model.ProductIsNew,
+                    Price = model.Price,
+                    IsNegotiatedPrice = model.IsNegotiatedPrice,
+                    Description = model.Description,
+                    AdvertPhotos = listPath,
+                    DateStartTime = DateTime.Now,
+                    Cities = model.City,
+                    Phones = model.Phone
+                };
 
-      }
+                foreach (var photo in model.Photos)
+                {
+                    string s = photo.UploadImage(uploadsFolder);
+                    listPath.Add(new AdvertPhoto()
+                    {
+                        PhotoPath = s
+                    });
+                }
+
+                newAdvert.AdvertPhotos = listPath;
+
+                _context.Adverts.Add(newAdvert);
+                _context.SaveChanges();
+                return RedirectToAction("Details", "Home", new { newAdvert.Id });
+            }
+
+            return View();
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id != null)
+            {
+
+                Advert advert = await _context.Adverts.Include(c => c.AdvertPhotos).FirstOrDefaultAsync(p => p.Id == id);
+                if (advert != null)
+                    return View(advert);
+            }
+            return NotFound();
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> DetailsAdvert(int? id)
+        {
+            if (id != null)
+            {
+                Advert advert = await _context.Adverts.Include(c => c.AdvertPhotos).FirstOrDefaultAsync(p => p.Id == id);
+                if (advert != null)
+                    return View(advert);
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult SetLanguage(string culture, string returnUrl)
+        {
+            Response.Cookies.Append(
+              CookieRequestCultureProvider.DefaultCookieName,
+              CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+              new CookieOptions
+              {
+                  Expires = DateTimeOffset.UtcNow.AddYears(1),
+              }
+            );
+
+            return LocalRedirect(returnUrl);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            Advert advert = await _context.Adverts.FirstOrDefaultAsync(p => p.Id == id);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            List<AdvertPhoto> listPath = advert.AdvertPhotos;
+
+            AdvertEditViewModel advertEditViewModel = new AdvertEditViewModel
+            {
+                UserId = userId,
+                Id = advert.Id,
+                Title = advert.Title,
+                Category = advert.Category,
+                ProductIsNew = advert.ProductIsNew,
+                Price = advert.Price,
+                IsNegotiatedPrice = advert.IsNegotiatedPrice,
+                Description = advert.Description,
+                DateStart = DateTime.Now,
+                City = advert.Cities,
+                Phone = advert.Phones
+            };
+
+
+            return View(advertEditViewModel);
+        }
+
+        //private string ProcessUploadedFile(AdvertCreateViewModel model)
+        //{
+        //    string uniqueFileName = null;
+        //    string uploadsFolder = Path.Combine(_hostEnvironment.WebRootPath, "images");
+
+        //    if (model.Photos != null && model.Photos.Count > 0)
+        //    {
+        //        foreach (var photo in model.Photos)
+        //        {
+        //            uniqueFileName = photo.UploadImage(uploadsFolder);
+        //        }
+
+        //    }
+
+        //    return uniqueFileName;
+        //}
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Edit(AdvertEditViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                Advert advert = await _context.Adverts.FirstOrDefaultAsync(p => p.Id == model.Id);
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                string uploadsFolder = Path.Combine(_hostEnvironment.WebRootPath, "images");
+
+                List<AdvertPhoto> listPath = advert.AdvertPhotos;
+
+                advert.Title = model.Title;
+                advert.Category = model.Category;
+                advert.ProductIsNew = model.ProductIsNew;
+                advert.Price = model.Price;
+                advert.IsNegotiatedPrice = model.IsNegotiatedPrice;
+                advert.Description = model.Description;
+                advert.UserId = userId;
+                advert.DateStartTime = DateTime.Now;
+                advert.Cities = model.City;
+                advert.Phones = model.Phone;
+
+
+                //if (model.Photos != null)
+                //{
+                //    if (model.ExistingPhotoPath != null)
+                //    {
+                //        string filePath = Path.Combine(_hostEnvironment.WebRootPath, "images", model.ExistingPhotoPath);
+                //        System.IO.File.Delete(filePath);
+                //    }
+
+                //}
+                foreach (var photo in model.Photos)
+                {
+                    string s = photo.UploadImage(uploadsFolder);
+                    listPath.Add(new AdvertPhoto()
+                    {
+                        PhotoPath = s
+                    });
+                }
+
+                advert.AdvertPhotos = listPath;
+
+                _context.Adverts.Update(advert);
+                _context.SaveChanges();
+                return RedirectToAction("List", "Home", new { advert.Id });
+            }
+
+            return View();
+        }
+
+        [HttpGet]
+        [ActionName("Delete")]
+        public async Task<IActionResult> ConfirmDelete(int? id)
+        {
+            if (id != null)
+            {
+                Advert advert = await _context.Adverts.FirstOrDefaultAsync(p => p.Id == id);
+                if (advert != null)
+                    return View(advert);
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id != null)
+            {
+                Advert advert = await _context.Adverts.Include(c => c.AdvertPhotos).FirstOrDefaultAsync(p => p.Id == id);
+                if (advert != null)
+                {
+                    _context.Adverts.Remove(advert);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("List");
+                }
+            }
+            return NotFound();
+        }
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [Authorize]
+        [AcceptVerbs("Get", "Post")]
+        public IActionResult ConvertToPdf(string sourceUrl)
+        {
+            SelectPdf.HtmlToPdf converter = new SelectPdf.HtmlToPdf();
+            SelectPdf.PdfDocument doc = converter.ConvertUrl(sourceUrl);
+
+            MemoryStream ms = new MemoryStream();
+            doc.Save(ms);
+            doc.Close();
+
+            ms.Position = 0;
+
+            FileStreamResult fileStreamResult = new FileStreamResult(ms, "application/pdf")
+            {
+                FileDownloadName = "Advert.pdf"
+            };
+
+            return fileStreamResult;
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult ConvertToPdfAjax(string sourceUrl)
+        {
+
+            SelectPdf.HtmlToPdf converter = new SelectPdf.HtmlToPdf();
+            SelectPdf.PdfDocument doc = converter.ConvertUrl(sourceUrl);
+
+            MemoryStream ms = new MemoryStream();
+            doc.Save(ms);
+            doc.Close();
+
+            ms.Position = 0;
+
+            FileStreamResult fileStreamResult = new FileStreamResult(ms, "application/pdf")
+            {
+                FileDownloadName = "Advert.pdf"
+            };
+
+            return fileStreamResult;
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Search(string keyword, string selectedCitys, int page = 1)
+        {
+            if (selectedCitys == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            if (keyword == null || keyword.Length < 2 || keyword.Length > 20)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            City city = (City)System.Enum.Parse(typeof(City), selectedCitys);
+
+            var result = _context.Adverts.OrderByDescending(x => x.DateStartTime).Include(c => c.AdvertPhotos);
+            int pageSize = 9;
+
+            string str1 = keyword.Remove(2);
+            string str2 = keyword.Substring(1, keyword.Length - 1);
+
+            var product = result.Where(t => t.Title.StartsWith(str1) || t.Title.EndsWith(str2) || t.Title.Contains(keyword)).Where(p => p.Cities == city);
+
+            var count = await product.CountAsync();
+            var items = await product.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
+            IndexViewModel viewModel = new IndexViewModel
+            {
+                PageViewModel = pageViewModel,
+                Adverts = items
+            };
+
+            ViewBag.citykeyword = selectedCitys;
+            ViewBag.keyword = keyword;
+            return View(viewModel);
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> SearchByCategory(string keyword, int page = 1)
+        {
+            if (keyword == null || keyword.Length < 3 || keyword.Length > 20)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                Categor category = (Categor)System.Enum.Parse(typeof(Categor), keyword);
+
+                var result = _context.Adverts.OrderByDescending(x => x.DateStartTime).Where(advert => advert.Category == category).Include(c => c.AdvertPhotos);
+
+                int pageSize = 3;
+
+                var count = await result.CountAsync();
+                var items = await result.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+                PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
+                IndexViewModel viewModel = new IndexViewModel
+                {
+                    PageViewModel = pageViewModel,
+                    Adverts = items
+                };
+
+                ViewBag.keyword = keyword;
+                return View(viewModel);
+
+            }
+        }
     }
-  }
 }

@@ -2,17 +2,21 @@
 
 namespace Board.Migrations
 {
-    public partial class City : Migration
+    public partial class Photo : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Citys",
+            migrationBuilder.DropColumn(
+                name: "PhotoPath",
+                table: "Adverts");
+
+            migrationBuilder.AddColumn<int>(
+                name: "Cities",
                 table: "Adverts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "Phone",
+                name: "Phones",
                 table: "Adverts",
                 nullable: true);
         }
@@ -20,12 +24,18 @@ namespace Board.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Citys",
+                name: "Cities",
                 table: "Adverts");
 
             migrationBuilder.DropColumn(
-                name: "Phone",
+                name: "Phones",
                 table: "Adverts");
+
+            migrationBuilder.AddColumn<string>(
+                name: "PhotoPath",
+                table: "Adverts",
+                type: "nvarchar(max)",
+                nullable: true);
         }
     }
 }
