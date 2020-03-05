@@ -2,7 +2,7 @@
 @model Board.Models.Advert
 @{
     ViewData["Title"] = "DetailsAdvert";
-    //var photoPath = "~/images/" + (Model.PhotoPath ?? "noimage.jpg");
+    var photoPath = "~/images/" + (Model.AdvertPhotos[0].PhotoPath ?? "noimage.jpg");
 }
 
 <h1>Обьявление</h1>
@@ -61,7 +61,7 @@
             @Html.DisplayFor(model => model.Phones)
         </dd>
         <dd>
-            @*<img class="rounded" src="@photoPath" asp-append-version="true" title="НЕТ КАРТИНКИ" style="width: 200px; height: 200px" />*@
+            <img class="rounded" src="@photoPath" asp-append-version="true" title="НЕТ КАРТИНКИ" style="width: 200px; height: 200px" />
         </dd>
     </dl>
 </div>

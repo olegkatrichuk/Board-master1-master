@@ -35,5 +35,7 @@ namespace Board.ViewModels
         [Required]
         [Phone]
         public string Phone { get; set; }
+
+        
     }
 }
