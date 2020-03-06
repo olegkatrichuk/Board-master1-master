@@ -7,7 +7,7 @@ namespace MyBoard.ViewModels
   {
     public int Id { get; set; }
 
-    public string ExistingPhotoPath { get; set; }
+    public string  ExistingPhotoPath { get; set; }
 
     public List<string> ImageStrings { get; set; }
 

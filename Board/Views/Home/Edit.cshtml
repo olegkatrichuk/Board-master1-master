@@ -4,7 +4,6 @@
 
 @{
     ViewData["Title"] = "Edit";
-    //var photoPath = "~/images/" + (Model.ExistingPhotoPath ?? "noimage.jpg");
 }
 
 <h1>Редактировать ваше обьявление</h1>
@@ -75,12 +74,15 @@
                 var photoPath = "~/images/" + (item ?? "noimage.jpg");
                 <img src="@photoPath" asp-append-version="true" style="width: 200px; height: 200px" class="m-2" />
                 <div class="form-check m-2">
-                    <input class="form-check-input" type="checkbox" name="@("PhotoUrlToDelete["+ i + "]")" value="@item" id="defaultCheck1">
+
+                    <input class="form-check-input" type="checkbox" name="@("PhotoUrlToDelete[" + i + "]")" value="@item" id="defaultCheck1">
                     <label class="form-check-label" for="defaultCheck1">
                         Удалить
                     </label>
+
                 </div>
                 <hr />
+
                 i++;
             }
         </div>

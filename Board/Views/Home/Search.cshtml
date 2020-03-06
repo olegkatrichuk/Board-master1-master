@@ -18,8 +18,8 @@
         }
         <div class="card p-3 m-3 " style="width: 21rem; ">
             <div class="card-img-top">
-                @*@{ var photoPath = "~/images/" + (item.PhotoPath ?? "noimage.jpg"); }
-                <img class="rounded img-fluid" src="@photoPath" asp-append-version="true" style="max-width: 320px; max-height: 200px;" />*@
+                @{ var photoPath = "~/images/" + (item.AdvertPhotos[0].PhotoPath ?? "noimage.jpg"); }
+                <img class="rounded img-fluid" src="@photoPath" asp-append-version="true" style="max-width: 320px; max-height: 200px;" />
             </div>
             <div class="card-inner">
                 <div class="header">

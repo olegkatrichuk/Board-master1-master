@@ -35,6 +35,19 @@ namespace MyBoard.Controllers
             return View();
         }
 
+        public IActionResult FileManagerService()
+        {
+            string path = "";
+
+            FileManager fileManager=new FileManager(new FileManager.DeleteMyFile(), path);
+            fileManager.WorkWithFile();
+
+            fileManager.Files=new FileManager.CreateMyFile();
+            fileManager.WorkWithFile();
+
+            return View();
+        }
+
     }
 }
 

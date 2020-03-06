@@ -1,8 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Http.Extensions
-@model Board.Models.Advert
+@model MyBoard.ViewModels.AdvertEditViewModel
 @{
     ViewData["Title"] = "DetailsAdvert";
-    var photoPath = "~/images/" + (Model.AdvertPhotos[0].PhotoPath ?? "noimage.jpg");
+    //var photoPath = "~/images/" + (Model.AdvertPhotos[0].PhotoPath ?? "noimage.jpg");
 }
 
 <h1>Обьявление</h1>
@@ -49,19 +49,24 @@
             @Html.DisplayFor(model => model.Description)
         </dd>
         <dt class="col-sm-2">
-            <label asp-for="Cities" class="control-label text-left ">Город</label>
+            <label asp-for="City" class="control-label text-left ">Город</label>
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Cities)
+            @Html.DisplayFor(model => model.City)
         </dd>
         <dt class="col-sm-2">
-            <label asp-for="Phones" class="control-label text-left">Телефон</label>
+            <label asp-for="Phone" class="control-label text-left">Телефон</label>
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Phones)
+            @Html.DisplayFor(model => model.Phone)
         </dd>
         <dd>
-            <img class="rounded" src="@photoPath" asp-append-version="true" title="НЕТ КАРТИНКИ" style="width: 200px; height: 200px" />
+            @foreach (var item in Model.ImageStrings)
+            {
+                var photoPath = "~/images/" + (item ?? "noimage.jpg");
+                <img src="@photoPath" asp-append-version="true" style="width: 200px; height: 200px" class="m-2" />
+                <hr />
+            }
         </dd>
     </dl>
 </div>

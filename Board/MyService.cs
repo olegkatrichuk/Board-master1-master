@@ -9,7 +9,7 @@ namespace MyBoard
 {
     public class MyService
     {
-        private ServiceConfig _serviceConfigServiceConfig;
+        private readonly ServiceConfig _serviceConfigServiceConfig;
         public MyService(ServiceConfig serviceConfigServiceConfig)
         {
             _serviceConfigServiceConfig = serviceConfigServiceConfig;

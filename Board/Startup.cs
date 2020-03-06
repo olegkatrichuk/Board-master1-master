@@ -116,8 +116,8 @@ namespace MyBoard
 
             services.AddControllersWithViews(options => { })
                 .AddNewtonsoftJson()
-                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-                .AddDataAnnotationsLocalization();
+                .AddDataAnnotationsLocalization()
+                .AddViewLocalization();
 
             services.AddSingleton<IAuthorizationHandler, CanEditOnlyOtherAdminRolesAndClaimsHandler>();
             services.AddSingleton<IAuthorizationHandler, SuperAdminHandler>();
@@ -136,7 +136,6 @@ namespace MyBoard
                 app.UseHsts();
             }
 
-
             app.UseRequestLocalization();
 
             app.UseHttpsRedirection();
@@ -144,6 +143,9 @@ namespace MyBoard
             app.UseCookiePolicy();
             app.UseSession();
             app.UseRouting();
+
+            var localizationOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>().Value;
+            app.UseRequestLocalization(localizationOptions);
 
             app.UseAuthentication();
             app.UseAuthorization();

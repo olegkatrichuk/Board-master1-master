@@ -126,7 +126,7 @@
     <comment>Поиск</comment>
   </data>
   <data name="String2" xml:space="preserve">
-    <value>Выберите город</value>
+    <value>Город</value>
     <comment>Город</comment>
   </data>
   <data name="String3" xml:space="preserve">

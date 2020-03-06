@@ -1,6 +1,6 @@
 ﻿@using Board.Migrations
 @using City = MyBoard.Models.City
-@model Board.ViewModels.AdvertCreateViewModel
+@model MyBoard.ViewModels.AdvertCreateViewModel
 
 @{
     ViewData["Title"] = "Создать";
@@ -74,6 +74,10 @@
                 <div class="custom-file col-6">
                     <input multiple asp-for="Photos" class="form-control custom-file-input" />
                     <label class="custom-file-label">Выберите фото</label>
+                    <span asp-validation-for="Photos" class="text-danger "></span>
+                </div>
+                <div class="text-danger mt-1">
+                    Для выбора нескольких фото зажмите CTRL
                 </div>
             </div>
         </div>

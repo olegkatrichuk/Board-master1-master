@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Board.Models;
 using Microsoft.AspNetCore.Http;
-using MyBoard.Models;
 using City = MyBoard.Models.City;
 
-namespace Board.ViewModels
+namespace MyBoard.ViewModels
 {
     public class AdvertCreateViewModel
     {

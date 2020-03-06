@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using MyBoard.Models;
+using Board.Models;
 
-namespace Board.Models
+namespace MyBoard.Models
 {
     public class Advert
     {

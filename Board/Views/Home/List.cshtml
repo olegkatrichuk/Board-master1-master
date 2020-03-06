@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Http.Extensions
 @using Org.BouncyCastle.Asn1.Ocsp
-@model IEnumerable<Board.Models.Advert>
+@model IEnumerable<MyBoard.Models.Advert>
 
 
 @{
@@ -13,10 +13,9 @@
 <p>
     <a asp-action="List"></a>
 </p>
-<table class="table">
+<table class="table table-striped table-responsive table-sm">
     <thead>
         <tr>
-
             <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
@@ -45,7 +44,7 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
+                <td cla>
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
                 <td>

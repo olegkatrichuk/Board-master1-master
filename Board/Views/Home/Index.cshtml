@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Hosting.Server.Features
 @using Microsoft.AspNetCore.Mvc.Localization
 
-@model cloudscribe.Pagination.Models.PagedResult<Advert>
+@model cloudscribe.Pagination.Models.PagedResult<MyBoard.Models.Advert>
 @inject IViewLocalizer Localizer
 @{
     ViewData["Title"] = "Home Page";
@@ -51,7 +51,7 @@
                 <input type="search" class="form-control" style="font-size: 20px" placeholder="@Localizer["String1"]" aria-label="Search" name="keyword" value="@ViewBag.keyword">
             </div>
             <div class="col-5" id="app">
-                <select type="text" class="form-control " style="font-size: 20px" v-model="selectedCitiess" name="selectedCitiess">
+                <select type="text" class="form-control " style="font-size: 20px" v-model="selectedCity" name="selectedCity">
                     <option value="" disabled selected>
                         @Localizer["String2"]
                     </option>
@@ -280,7 +280,7 @@
         var app = new Vue({
             el: '#app',
             data: {
-                selectedCitys: '',
+                selectedCity: '',
                 cities: [
                     'Винница', 'Днепр', 'Донецк', 'Житомир', 'Запорожье', 'Ивано-Франковск', 'Киев', 'Кропивницкий', 'Луганск', 'Луцк', 'Львов', 'Николаев',
                     'Одесса', 'Полтава', 'Ровно', 'Сумы', 'Тернополь', 'Ужгород', 'Харьков', 'Херсон', 'Хмельницкий', 'Черкассы', 'Чернигов', 'Черновцы'
