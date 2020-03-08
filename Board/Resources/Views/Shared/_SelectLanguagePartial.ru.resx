@@ -117,28 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Header" xml:space="preserve">
-    <value>Дошка оголошень</value>
-    <comment>Зоголовок на головний сторинци</comment>
-  </data>
-  <data name="Message1" xml:space="preserve">
-    <value>Регістрація</value>
-    <comment>Регистрация нового пользователя</comment>
-  </data>
-  <data name="Message2" xml:space="preserve">
-    <value>Вхід</value>
-    <comment>Вход пользователя</comment>
-  </data>
-  <data name="Message3" xml:space="preserve">
-    <value>Подати оголошення</value>
-    <comment>Подать обьявление</comment>
-  </data>
-  <data name="Message4" xml:space="preserve">
-    <value>Моi оголошення</value>
-    <comment>Мои обьявления</comment>
-  </data>
-  <data name="Выйти" xml:space="preserve">
-    <value>Вийти</value>
-    <comment>Вийти</comment>
+  <data name="String1" xml:space="preserve">
+    <value>Выберите язык</value>
+    <comment>Выберите язык</comment>
   </data>
 </root>

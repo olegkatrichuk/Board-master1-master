@@ -62,7 +62,7 @@
                             <li class="nav-item active">
                                 <form method="post" asp-controller="Account" asp-action="Logout">
                                     <button type="submit" class="nav-link btn btn-link text-success">
-                                        Выйти @User.Identity.Name
+                                        @Localizer["Выйти"] @User.Identity.Name
                                     </button>
                                 </form>
                             </li>

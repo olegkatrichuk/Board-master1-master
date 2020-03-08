@@ -8,26 +8,21 @@ using Microsoft.AspNetCore.Http;
 
 namespace MyBoard
 {
-    public static class UploadImageUtilities
+  public static class UploadImageUtilities
+  {
+
+    public static string UploadImage(this IFormFile file, string outputPath)
     {
-        public static string UploadImage(this IFormFile file, string outputPath)
-        {
-            string uploadsFolder = outputPath;
-            string uniqueFileName = Guid.NewGuid() + "_" + file.FileName;
-            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-            using var fileStream = new FileStream(filePath, FileMode.Create);
-            file.CopyTo(fileStream);
-
-            return uniqueFileName;
-        }
-
-        public static void DeleteImage(this IFormFile file, string outputPath)
-        {
-            FileInfo fileInf = new FileInfo(outputPath);
-            if (fileInf.Exists)
-            {
-                fileInf.Delete();
-            }
-        }
+      var create = new FileManager.CreateMyFile();
+      FileManager fileManager = new FileManager(create, outputPath,file);
+      fileManager.WorkWithFile();
+      return create.Result;
     }
+
+    public static void DeleteImage(this IFormFile file, string outputPath)
+    {
+      FileManager fileManager = new FileManager(new FileManager.DeleteMyFile(), outputPath,file);
+      fileManager.WorkWithFile();
+    }
+  }
 }

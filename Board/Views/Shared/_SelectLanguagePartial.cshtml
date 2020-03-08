@@ -15,11 +15,11 @@
         .ToList();
 }
 
-<form asp-controller="Home" asp-action="SetLanguage" style="margin:8px;"
-      asp-route-returnUrl="@Context.Request.Path"
-      method="post" class="text-info">
-    Выберите язык : <select name="culture" onchange="this.form.submit();"
-                            asp-for="@requestCulture.RequestCulture.UICulture.Name"
-                            asp-items="cultureItems"></select>
-</form>
+    <form asp-controller="Home" asp-action="SetLanguage" style="margin:8px;"
+          asp-route-returnUrl="@Context.Request.Path"
+          method="post" class="text-info">
+        @Localizer["String1"] : <select name="culture" onchange="this.form.submit();"
+                                         asp-for="@requestCulture.RequestCulture.UICulture.Name"
+                                         asp-items="cultureItems"></select>
+    </form>
 

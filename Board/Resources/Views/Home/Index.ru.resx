@@ -125,12 +125,168 @@
     <value>Поиск</value>
     <comment>Поиск</comment>
   </data>
+  <data name="String10" xml:space="preserve">
+    <value>Услуги</value>
+    <comment>Услуги</comment>
+  </data>
+  <data name="String11" xml:space="preserve">
+    <value>Одежда</value>
+    <comment>Одежда</comment>
+  </data>
+  <data name="String12" xml:space="preserve">
+    <value>Дети</value>
+    <comment>Дети</comment>
+  </data>
+  <data name="String13" xml:space="preserve">
+    <value>Запчасти</value>
+    <comment>Запчасти</comment>
+  </data>
+  <data name="String14" xml:space="preserve">
+    <value>Обмен</value>
+    <comment>Обмен</comment>
+  </data>
+  <data name="String15" xml:space="preserve">
+    <value>Подарю</value>
+    <comment>Подарю</comment>
+  </data>
+  <data name="String16" xml:space="preserve">
+    <value>Отдых</value>
+    <comment>Отдых</comment>
+  </data>
+  <data name="String17" xml:space="preserve">
+    <value>Бизнес</value>
+    <comment>Бизнес</comment>
+  </data>
+  <data name="String18" xml:space="preserve">
+    <value>подробнее</value>
+    <comment>подробнее</comment>
+  </data>
+  <data name="String19" xml:space="preserve">
+    <value>Винница</value>
+    <comment>Винница</comment>
+  </data>
   <data name="String2" xml:space="preserve">
     <value>Город</value>
     <comment>Город</comment>
   </data>
+  <data name="String20" xml:space="preserve">
+    <value>Днепр</value>
+    <comment>Днепр</comment>
+  </data>
+  <data name="String21" xml:space="preserve">
+    <value>Донецк</value>
+    <comment>Донецк</comment>
+  </data>
+  <data name="String22" xml:space="preserve">
+    <value>Житомир</value>
+    <comment>Житомир</comment>
+  </data>
+  <data name="String23" xml:space="preserve">
+    <value>Запорожье</value>
+    <comment>Запорожье</comment>
+  </data>
+  <data name="String24" xml:space="preserve">
+    <value>Ивано-Франковск</value>
+    <comment>Ивано-Франковск</comment>
+  </data>
+  <data name="String25" xml:space="preserve">
+    <value>Киев</value>
+    <comment>Киев</comment>
+  </data>
+  <data name="String26" xml:space="preserve">
+    <value>Кропивницкий</value>
+    <comment>Кропивницкий</comment>
+  </data>
+  <data name="String27" xml:space="preserve">
+    <value>Луганск</value>
+    <comment>Луганск</comment>
+  </data>
+  <data name="String28" xml:space="preserve">
+    <value>Луцк</value>
+    <comment>Луцк</comment>
+  </data>
+  <data name="String29" xml:space="preserve">
+    <value>Львов</value>
+    <comment>Львов</comment>
+  </data>
   <data name="String3" xml:space="preserve">
     <value>Найти</value>
     <comment>Поиск</comment>
+  </data>
+  <data name="String30" xml:space="preserve">
+    <value>Николаев</value>
+    <comment>Николаев</comment>
+  </data>
+  <data name="String31" xml:space="preserve">
+    <value>Одесса</value>
+    <comment>Одесса</comment>
+  </data>
+  <data name="String32" xml:space="preserve">
+    <value>Полтава</value>
+    <comment>Полтава</comment>
+  </data>
+  <data name="String33" xml:space="preserve">
+    <value>Ровно</value>
+    <comment>Ровно</comment>
+  </data>
+  <data name="String34" xml:space="preserve">
+    <value>Сумы</value>
+    <comment>Сумы</comment>
+  </data>
+  <data name="String35" xml:space="preserve">
+    <value>Тернополь</value>
+    <comment>Тернополь</comment>
+  </data>
+  <data name="String36" xml:space="preserve">
+    <value>Ужгород</value>
+    <comment>Ужгород</comment>
+  </data>
+  <data name="String37" xml:space="preserve">
+    <value>Харьков</value>
+    <comment>Харьков</comment>
+  </data>
+  <data name="String38" xml:space="preserve">
+    <value>Херсон</value>
+    <comment>Херсон</comment>
+  </data>
+  <data name="String39" xml:space="preserve">
+    <value>Хмельницкий</value>
+    <comment>Хмельницкий</comment>
+  </data>
+  <data name="String4" xml:space="preserve">
+    <value>Недвижимость</value>
+    <comment>Недвижимость</comment>
+  </data>
+  <data name="String40" xml:space="preserve">
+    <value>Черкассы</value>
+    <comment>Черкассы</comment>
+  </data>
+  <data name="String41" xml:space="preserve">
+    <value>Чернигов</value>
+    <comment>Чернигов</comment>
+  </data>
+  <data name="String42" xml:space="preserve">
+    <value>Черновцы</value>
+    <comment>Черновцы</comment>
+  </data>
+  <data name="String5" xml:space="preserve">
+    <value>Транспорт</value>
+    <comment>Транспорт</comment>
+  </data>
+  <data name="String6" xml:space="preserve">
+    <value>Работа</value>
+    <comment>Работа</comment>
+  </data>
+  <data name="String7" xml:space="preserve">
+    <value>Животные</value>
+    <comment>Животные</comment>
+  </data>
+  <data name="String8" xml:space="preserve">
+    <value>Электроника</value>
+    <comment>Электроника</comment>
+  </data>
+  <data name="String9" xml:space="preserve">
+    <value>Спорт</value>
+    <comment>Спорт</comment>
   </data>
 </root>

@@ -14,7 +14,6 @@ namespace MyBoard
         public string GetUrl { get; set; }
         public string OutUrl { get; set; }
         public string GetUnicName { get; set; }
-
        
     }
 
