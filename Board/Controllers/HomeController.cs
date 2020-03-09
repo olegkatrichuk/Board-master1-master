@@ -94,13 +94,23 @@ namespace MyBoard.Controllers
                     Phones = model.Phone
                 };
 
-                foreach (var photo in model.Photos)
+                //if (listPath.Count == 0)
+                //{
+                //    listPath.Add(new AdvertPhoto()
+                //    {
+                //        PhotoPath = @"D:\Example\BoardMaster\Board\wwwroot\img\no-image.png"
+                //    });
+                //}
+                //else
                 {
-                    string s = photo.UploadImage(uploadsFolder);
-                    listPath.Add(new AdvertPhoto()
+                    foreach (var photo in model.Photos)
                     {
-                        PhotoPath = s
-                    });
+                        string s = photo.UploadImage(uploadsFolder);
+                        listPath.Add(new AdvertPhoto()
+                        {
+                            PhotoPath = s
+                        });
+                    }
                 }
 
                 newAdvert.AdvertPhotos = listPath;
@@ -231,7 +241,6 @@ namespace MyBoard.Controllers
                         _context.AdvertPhotos.Remove(advertPhoto);
                         _context.SaveChanges();
                     }
-
                 }
 
                 foreach (var photo in model.Photos ?? new List<IFormFile>())
