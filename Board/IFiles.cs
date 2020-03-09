@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Http;
 
 namespace MyBoard
 {
-  public interface IFiles
-  {
-    void WorkWithFile(string path, IFormFile file);
-  }
+    public interface IFileManager
+    {
+        string UploadFile(string path, IFormFile file);
+
+        void DeleteFile(string path);
+    }
 }

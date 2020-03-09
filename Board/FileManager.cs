@@ -7,52 +7,27 @@ using Microsoft.AspNetCore.Http;
 
 namespace MyBoard
 {
-  public class FileManager
-  {
-    public IFiles Files { get; set; }
-
-    protected string ThePath { get; set; }
-
-    protected IFormFile FormFile { get; set; }
-
-    public FileManager(IFiles files, string path, IFormFile formFile)
+    public class LocalFileManager : IFileManager
     {
-      Files = files;
-      ThePath = path;
-      FormFile = formFile;
-    }
 
-    public void WorkWithFile()
-    {
-      Files.WorkWithFile(ThePath, FormFile);
-    }
-
-    public class DeleteMyFile : IFiles
-    {
-      public void WorkWithFile(string path, IFormFile file)
-      {
-        FileInfo fileInf = new FileInfo(path);
-        if (fileInf.Exists)
+        public string UploadFile( string path, IFormFile formFile)
         {
-          fileInf.Delete();
+            string uploadsFolder = path;
+            string uniqueFileName = Guid.NewGuid() + "_" + formFile.FileName;
+            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            using var fileStream = new FileStream(filePath, FileMode.Create);
+            formFile.CopyTo(fileStream);
+            return uniqueFileName;
         }
-      }
+
+        public void DeleteFile(string path)
+        {
+            FileInfo fileInf = new FileInfo(path);
+            if (fileInf.Exists)
+            {
+                fileInf.Delete();
+            }
+        }
     }
-
-    public class CreateMyFile : IFiles
-    {
-      public string Result { get; set; }
-
-      public void WorkWithFile(string outputPath, IFormFile file)
-      {
-        string uploadsFolder = outputPath;
-        string uniqueFileName = Guid.NewGuid() + "_" + file.FileName;
-        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-        using var fileStream = new FileStream(filePath, FileMode.Create);
-        file.CopyTo(fileStream);
-        Result = uniqueFileName;
-      }
-
-    }
-  }
 }
+

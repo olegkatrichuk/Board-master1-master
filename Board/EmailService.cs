@@ -13,7 +13,7 @@ namespace MyBoard
     {
       var emailMessage = new MimeMessage();
 
-      emailMessage.From.Add(new MailboxAddress("Администрация сайта", "adminmalt@ukr.net"));
+      emailMessage.From.Add(new MailboxAddress("Администрация сайта", "malt22222222@gmail.com"));
       emailMessage.To.Add(new MailboxAddress("", email));
       emailMessage.Subject = subject;
       emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
@@ -23,7 +23,7 @@ namespace MyBoard
 
       using var client = new SmtpClient();
       await client.ConnectAsync("smtp.ukr.net", 465, true);
-      await client.AuthenticateAsync("adminmalt@ukr.net", "Ruslan280222@");
+      await client.AuthenticateAsync("malt22222222@gmail.com", "Ruslan280222@");
       await client.SendAsync(emailMessage);
 
       await client.DisconnectAsync(true);
