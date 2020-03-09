@@ -65,13 +65,13 @@
                 <td>
                     @{
                         var photoPath = "";
-                        if (string.IsNullOrEmpty(item.AdvertPhotos[0].PhotoPath))
+                        if (item.AdvertPhotos.Any())
                         {
-                            photoPath = "noimage.jpg";
+                            photoPath = "~/images/" + (item.AdvertPhotos[0].PhotoPath );
                         }
                         else
                         {
-                            photoPath = "~/images/" + (item.AdvertPhotos[0].PhotoPath );
+                            photoPath = "noimage.jpg";
                         }
                          
                     }

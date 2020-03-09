@@ -3,6 +3,15 @@
 @{
     ViewData["Title"] = "Delete";
     //var photoPath = "~/images/" + (Model.AdvertPhotos[0].PhotoPath ?? "noimage.jpg");
+    var photoPath = "";
+    if (Model.AdvertPhotos.Any())
+    {
+        photoPath = "~/images/" + (Model.AdvertPhotos[0].PhotoPath);
+    }
+    else
+    {
+        photoPath = "noimage.jpg";
+    }
 }
 
 <h1 class="text-danger">Вы точно хотите удалить обьявление?</h1>
@@ -49,7 +58,7 @@
             @Html.DisplayFor(model => model.Description)
         </dd>
         <dd>
-            @*<img class="rounded" src="@photoPath" asp-append-version="true" style="width: 200px; height: 200px" />*@
+            <img class="rounded" src="@photoPath" asp-append-version="true" style="width: 100px; height: 100px" />
         </dd>
 
     </dl>

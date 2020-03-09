@@ -3,7 +3,16 @@
 
 @{
     ViewData["Title"] = "Details";
-    var photoPath = "~/images/" + (Model.AdvertPhotos[0].PhotoPath ?? "noimage.jpg");
+    var photoPath = "";
+    if (Model.AdvertPhotos.Any())
+    {
+        photoPath = "~/images/" + (Model.AdvertPhotos[0].PhotoPath ?? "noimage.jpg");
+    }
+    else
+    {
+        photoPath = "noimage.jpg";
+    }
+
 }
 
 <h1>Детали вашего обьявления</h1>
@@ -68,16 +77,16 @@
 </div>
 
 <div>
-   @* @Html.ActionLink("PDF", "ConvertToPdf", new { id = Model.Id, sourceUrl = Context.Request.GetEncodedUrl() })|*@
+    @* @Html.ActionLink("PDF", "ConvertToPdf", new { id = Model.Id, sourceUrl = Context.Request.GetEncodedUrl() })|*@
     @Html.ActionLink("Редактировать", "Edit", new { id = Model.Id }) |
     <a asp-action="Index">На главную страницу</a>
 </div>
 
-    <div id="js-result"></div>
-    <button type="button" class="btn btn-info" id="js-load">
-        <span class="spinner-grow spinner-grow-sm d-none" role="status" aria-hidden="true"></span>
-        Экспортировать в PDF
-    </button>
+<div id="js-result"></div>
+<button type="button" class="btn btn-info" id="js-load">
+    <span class="spinner-grow spinner-grow-sm d-none" role="status" aria-hidden="true"></span>
+    Экспортировать в PDF
+</button>
 
 
 @section scripts
@@ -88,21 +97,21 @@
         $('#js-load').click(function () {
             var _this = $(this);
             $.ajax({
-                    type: 'GET',
-                    url: "https://localhost:44321/home/converttopdfAjax",
-                    xhrFields: {
-                        responseType: 'blob'
-                    },
-                    beforeSend: function() {
-                        _this
-                            .prop('disabled', true)
-                            .find('.spinner-grow').removeClass('d-none');
-                    },
-                    data: {
-                        sourceUrl: window.location.href
-                    }
-                })
-                .done(function(data) {
+                type: 'GET',
+                url: "https://localhost:44321/home/converttopdfAjax",
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                beforeSend: function () {
+                    _this
+                        .prop('disabled', true)
+                        .find('.spinner-grow').removeClass('d-none');
+                },
+                data: {
+                    sourceUrl: window.location.href
+                }
+            })
+                .done(function (data) {
                     var a = document.createElement('a');
                     var url = window.URL.createObjectURL(data);
                     a.href = url;
