@@ -24,7 +24,7 @@ namespace Board.Models
             foreach (var foreignKey in modelBuilder.Model.GetEntityTypes()
               .SelectMany(e => e.GetForeignKeys()))
             {
-                foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
+                foreignKey.DeleteBehavior = DeleteBehavior.Cascade;
             }
         }
 

@@ -15,7 +15,6 @@ namespace MyBoard
         {
             IFileManager fileManager = new LocalFileManager();
             return fileManager.UploadFile(outputPath, file);
-
         }
 
         public static void DeleteImage(string outputPath)

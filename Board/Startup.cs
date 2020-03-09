@@ -33,7 +33,13 @@ namespace MyBoard
         {
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
-            services.AddSession();
+            services.AddSession(options =>
+            {
+                options.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.IsEssential = true;
+            });
+
             services.AddRazorPages();
             services.AddCloudscribePagination();
 
@@ -112,7 +118,6 @@ namespace MyBoard
 
             services.Configure<CustomEmailConfirmationTokenProviderOptions>(o =>
               o.TokenLifespan = TimeSpan.FromDays(3));
-
 
             services.AddControllersWithViews(options => { })
                 .AddNewtonsoftJson()

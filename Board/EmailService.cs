@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MailKit.Net.Smtp;
+using MailKit.Security;
 using MimeKit;
 
 namespace MyBoard
@@ -22,7 +23,7 @@ namespace MyBoard
       };
 
       using var client = new SmtpClient();
-      await client.ConnectAsync("smtp.ukr.net", 465, true);
+      await client.ConnectAsync("smtp.gmail.com", 465,true);
       await client.AuthenticateAsync("malt22222222@gmail.com", "Ruslan280222@");
       await client.SendAsync(emailMessage);
 
