@@ -63,7 +63,18 @@
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
-                    @{ var photoPath = "~/images/" + (item.AdvertPhotos[0].PhotoPath ?? "noimage.jpg");}
+                    @{
+                        var photoPath = "";
+                        if (string.IsNullOrEmpty(item.AdvertPhotos[0].PhotoPath))
+                        {
+                            photoPath = "noimage.jpg";
+                        }
+                        else
+                        {
+                            photoPath = "~/images/" + (item.AdvertPhotos[0].PhotoPath );
+                        }
+                         
+                    }
                     <img class="rounded" src="@photoPath" asp-append-version="true" style="width: 100px; height: 100px" />
                 </td>
                 <td>
