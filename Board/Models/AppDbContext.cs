@@ -17,15 +17,21 @@ namespace Board.Models
 
         public DbSet<Advert> Adverts { get; set; }
         public DbSet<AdvertPhoto> AdvertPhotos { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            foreach (var foreignKey in modelBuilder.Model.GetEntityTypes()
-              .SelectMany(e => e.GetForeignKeys()))
-            {
-                foreignKey.DeleteBehavior = DeleteBehavior.Cascade;
-            }
+            modelBuilder.Entity<AdvertPhoto>()
+                .HasOne(p => p.Advert)
+                .WithMany(t => t.AdvertPhotos)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            //foreach (var foreignKey in modelBuilder.Model.GetEntityTypes()
+            //  .SelectMany(e => e.GetForeignKeys()))
+            //{
+            //    foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
+            //}
         }
 
     }
