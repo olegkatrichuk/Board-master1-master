@@ -225,7 +225,6 @@
     @{ int i = 3;}
     @foreach (var item in Model.Data)
     {
-
         if (i > 0 && i % 3 == 0)
         {
         @:</div><div class="row">
@@ -242,7 +241,6 @@
                     {
                         photoPath = "noimage.jpg";
                     }
-                        
                 }
                 <img class="rounded img-fluid" src="@photoPath" asp-append-version="true" style="max-width: 320px; max-height: 200px;" />
             </div>

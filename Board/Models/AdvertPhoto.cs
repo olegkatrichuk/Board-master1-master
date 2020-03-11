@@ -8,7 +8,6 @@ namespace MyBoard.Models
 {
     public class AdvertPhoto
     {
-        
         public int Id { get; set; }
         public string PhotoPath { get; set; }
         public int AdvertId { get; set; }

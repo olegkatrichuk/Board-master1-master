@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using LazZiya.ImageResize;
 using Microsoft.AspNetCore.Http;
 
 namespace MyBoard
 {
     public class LocalFileManager : IFileManager
     {
-
         public string UploadFile( string path, IFormFile formFile)
         {
             string uploadsFolder = path;

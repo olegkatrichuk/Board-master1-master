@@ -11,6 +11,7 @@ namespace MyBoard.Models
 
         [Required]
         [Display(Name = "Заголовок")]
+        [StringLength(100)]
         public string Title { get; set; }
 
         [Display(Name = "Категория")]
@@ -20,16 +21,16 @@ namespace MyBoard.Models
         public ProductNew? ProductIsNew { get; set; }
 
         [Display(Name = "Цена")]
+        [Range(0, 10000000)]
         public double Price { get; set; }
 
         [Display(Name = "Договорная цена")]
         public bool IsNegotiatedPrice { get; set; }
 
         [Display(Name = "Описание")]
+        [StringLength(1000)]
         public string Description { get; set; }
 
-        //[Display(Name = "Фотография")]
-        //public string PhotoPath { get; set; }
         public User User { get; set; }
 
         [Display(Name = "Фотография")]
@@ -45,6 +46,7 @@ namespace MyBoard.Models
 
         [Display(Name = "Телефон")]
         [Phone]
+        [StringLength(30)]
         public string Phones { get; set; }
 
     }

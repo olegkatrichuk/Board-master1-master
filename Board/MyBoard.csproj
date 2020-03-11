@@ -19,6 +19,7 @@
   <ItemGroup>
     <PackageReference Include="cloudscribe.Pagination.Models" Version="1.0.5" />
     <PackageReference Include="cloudscribe.Web.Pagination" Version="3.0.0" />
+    <PackageReference Include="LazZiya.ImageResize" Version="3.0.0" />
     <PackageReference Include="MailKit" Version="2.5.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.2" />
@@ -47,7 +48,7 @@
     <PackageReference Include="Select.HtmlToPdf.NetCore" Version="19.2.0" />
     <PackageReference Include="SharpZipLib" Version="1.2.0" />
     <PackageReference Include="Syncfusion.HtmlToPdfConverter.QtWebKit.Net.Core" Version="17.4.0.46" />
-    <PackageReference Include="Syncfusion.Pdf.Net.Core" Version="17.4.0.53" />
+    <PackageReference Include="Syncfusion.Pdf.Net.Core" Version="17.4.0.55" />
   </ItemGroup>
 
   <ItemGroup>
