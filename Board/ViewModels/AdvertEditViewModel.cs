@@ -11,6 +11,6 @@ namespace MyBoard.ViewModels
 
     public List<string> ImageStrings { get; set; }
 
-    public List<string> PhotoUrlToDelete { get; set; }
+    public IList<string> PhotoUrlToDelete { get; set; }
   }
 }

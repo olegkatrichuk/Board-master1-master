@@ -50,7 +50,7 @@
         <div class="form-group row">
             <h4><label asp-for="Phone" class="control-label col-sm-2">Телефон</label></h4>
             <div class=" col-sm-10">
-                <input asp-for="Phone" type="tel"  class="form-control col-2" />
+                <input asp-for="Phone" type="tel" class="form-control col-2" />
                 <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
         </div>
@@ -93,7 +93,7 @@
                     $('.custom-file-input').on("change", function () {
                         var fileLabel = $(this).next('.custom-file-label');
                         var files = $(this)[0].files;
-                        if (files.length > 1) {
+                        if (files.length > 1 && files.length < 6) {
                             fileLabel.html(files.length + ' выбрано фото');
                         } else if (files.length === 1) {
                             fileLabel.html(files[0].name);

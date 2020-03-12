@@ -12,7 +12,7 @@
 <div class="container">
     <form asp-action="Edit" method="post" enctype="multipart/form-data">
         <input hidden asp-for="Id" />
-        <input hidden asp-for="ExistingPhotoPath" />
+        @*<input hidden asp-for="ExistingPhotoPath" />*@
         <div class="form-group row">
             <h4><label asp-for="Title" class="col-sm-2 control-label">Заголовок</label></h4>
             <div class="col-sm-10">
@@ -68,23 +68,22 @@
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
         <div class="form-group row col-sm-4 ">
-            @{
-                int i = 0;
-                foreach (var item in Model.ImageStrings)
-                {
-                    var photoPath = "~/images/" + (item ?? "noimage.jpg");
-                    <img src="@photoPath" asp-append-version="true" style="width: 200px; height: 200px" class="m-2"/>
-                    <div class="form-check m-2">
 
-                        <input class="form-check-input" type="checkbox" name="@($"PhotoUrlToDelete[{i}]")" value="@item" id="defaultCheck1">
-                        <label class="form-check-label" for="defaultCheck1">
-                            Удалить
-                        </label>
-                    </div>
-                    <hr/>
-                    i++;
-                }
+            @for (var index = 0; index < Model.ImageStrings.Count; index++)
+            {
+                var item = Model.ImageStrings[index];
+                var photoPath = "~/images/" + (item ?? "noimage.jpg");
+                <img src="@photoPath" asp-append-version="true" style="width: 200px; height: 200px" class="m-2" />
+                <div class="form-check m-2">
+
+                    <input class="form-check-input" type="checkbox" name="@($"PhotoUrlToDelete[{index}]")" value="@item" />
+                    <label class="form-check-label">
+                        Удалить
+                    </label>
+                </div>
+                <hr />
             }
+
         </div>
         <div class="form-group row">
             <h4><label asp-for="Photos" class="col-sm-2 control-label">Изображение</label></h4>
@@ -114,7 +113,7 @@
             $('.custom-file-input').on("change", function () {
                 var fileLabel = $(this).next('.custom-file-label');
                 var files = $(this)[0].files;
-                if (files.length > 1) {
+                if (files.length > 1 && files.length < 6) {
                     fileLabel.html(files.length + ' выбрано фото');
                 } else if (files.length === 1) {
                     fileLabel.html(files[0].name);

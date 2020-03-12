@@ -196,10 +196,11 @@ namespace MyBoard.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Edit(AdvertEditViewModel model)
+        public async Task<IActionResult> Edit([FromFormAttribute]AdvertEditViewModel model)
         {
             if (ModelState.IsValid)
             {
+
                 Advert advert = await _context.Adverts.Include(c => c.AdvertPhotos).FirstOrDefaultAsync(p => p.Id == model.Id);
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 string uploadsFolder = Path.Combine(_hostEnvironment.WebRootPath, "images");
