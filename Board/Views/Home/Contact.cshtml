@@ -1,0 +1,46 @@
+﻿@model MyBoard.ViewModels.ContactViewModel
+@{
+    ViewData["Title"] = "Contact";
+}
+<h2 class="text-xl-center text-danger">Написать письмо</h2>
+
+<div class="container mt-2">
+    <div class="has-error" col-md-12>
+        <form method="post" asp-action="Contact" asp-controller="Home">
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label asp-for="Name">Имя:</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-muted"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label asp-for="Email">Адрес:</label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-muted"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label asp-for="Subject">Проблема:</label>
+                    <input asp-for="Subject" class="form-control" />
+                    <span asp-validation-for="Subject" class="text-muted"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label asp-for="Message">Описание:</label>
+                    <textarea rows="8" cols="20" asp-for="Message" class="form-control"></textarea>
+                    <span asp-validation-for="Message" class="text-muted"></span>
+                </div>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-success">Отправить</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="m-3">
+    <a asp-action="Index">На главную страницу</a>
+</div>

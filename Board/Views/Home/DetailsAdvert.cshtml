@@ -60,7 +60,7 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Phone)
         </dd>
-        <dd>
+        <dd >
             @foreach (var item in Model.ImageStrings)
             {
                 var photoPath = "~/images/" + (item ?? "noimage.jpg");
@@ -73,3 +73,8 @@
 <div>
     <a asp-action="Index">На главную страницу</a>
 </div>
+
+@section Scripts
+{
+    
+}

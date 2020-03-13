@@ -42,6 +42,7 @@ namespace MyBoard
 
             services.AddRazorPages();
             services.AddCloudscribePagination();
+            services.AddMvc();
 
             services.Configure<RequestLocalizationOptions>(options =>
             {

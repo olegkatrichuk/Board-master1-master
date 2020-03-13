@@ -75,9 +75,7 @@
                 var photoPath = "~/images/" + (item ?? "noimage.jpg");
                 <img src="@photoPath" asp-append-version="true" style="width: 200px; height: 200px" class="m-2" />
                 <div class="form-check m-2">
-
                     <input class="form-check-input" type="checkbox"  value="@item" asp-for="@Model.PhotoUrlToDelete[index]" />
-                    @*<input type="checkbox" id="@Model.PhotoUrlToDelete[index].Value" asp-for="PhotoUrlToDelete[index].IsSelected" value="@index" checked="@Model.PhotoUrlToDelete[index].IsSelected" />*@
                     <label class="form-check-label">
                         Удалить
                     </label>
@@ -101,7 +99,6 @@
     </form>
 </div>
 
-
 <div>
     <a asp-action="Index">На главную страницу</a>
 </div>
@@ -118,6 +115,8 @@
                     fileLabel.html(files.length + ' выбрано фото');
                 } else if (files.length === 1) {
                     fileLabel.html(files[0].name);
+                } else {
+                    fileLabel.html('Выберите до 6 фото');
                 }
             });
         });

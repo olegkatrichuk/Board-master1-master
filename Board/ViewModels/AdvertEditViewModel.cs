@@ -13,11 +13,4 @@ namespace MyBoard.ViewModels
 
     public IList<string> PhotoUrlToDelete { get; set; }
   }
-
-  public class SelectedCheckbox
-  {
-    public string Value { get; set; }
-
-    public bool IsChecked { get; set; }
-  }
 }
