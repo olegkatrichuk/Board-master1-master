@@ -23,7 +23,7 @@ namespace MyBoard.ViewModels
         [Required]
         public string Description { get; set; }
 
-        public List<IFormFile> Photos { get; set; }
+        public List<string>  Photos { get; set; }
 
         public string UserId { get; set; }
 

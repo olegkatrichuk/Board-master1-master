@@ -1,12 +1,18 @@
 ﻿@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.Extensions.Options
+@using MyBoard.Models
+
+
 @model MyBoard.Models.Advert
+@inject IOptions<AzureStorageConfig> Settings
+
 
 @{
     ViewData["Title"] = "Details";
     var photoPath = "";
     if (Model.AdvertPhotos.Any())
     {
-        photoPath = "~/images/" + (Model.AdvertPhotos[0].PhotoPath ?? "noimage.jpg");
+        photoPath = "https://" + Settings.Value.AccountName + ".blob.core.windows.net/" + Settings.Value.ImageContainer + "/" + Model.AdvertPhotos[0].PhotoPath;
     }
     else
     {

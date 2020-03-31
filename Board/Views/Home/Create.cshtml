@@ -1,13 +1,58 @@
-﻿@using Board.Migrations
+﻿@using System.Globalization
+@using Board.Migrations
+@using MyBoard.Models
 @using City = MyBoard.Models.City
 @model MyBoard.ViewModels.AdvertCreateViewModel
+@inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = "Создать";
+    //ViewData["Title"] = "Создать";
 }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/min/dropzone.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/blueimp-gallery/2.25.2/css/blueimp-gallery.min.css" crossorigin="anonymous">
+
+<style>
+    html {
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    }
+
+    main {
+        margin: 20px;
+    }
+
+    #gallery-note {
+        font-size: smaller
+    }
+
+    .blueimp-gallery {
+        margin: 25px;
+        max-width: 150px;
+        padding-bottom: 150px;
+    }
+
+    .dropzone {
+        border: 3px dashed #00a1f1;
+        background: #F0F8FF;
+        margin: 25px;
+        border-radius: 5px;
+        max-width: 400px;
+    }
+
+        .dropzone .dz-message {
+            font-weight: 300;
+        }
+
+            .dropzone .dz-message .note {
+                font-family: sans-serif;
+                font-size: 18px;
+                font-weight: 200;
+                display: block;
+                margin-top: 1.5rem;
+            }
+</style>
 
 <br />
-<h3 class="text-center text-dark">Создать новое обьявление</h3>
+<h3 class="text-center text-dark">@Localizer["Создать новое обьявление"]</h3>
 <hr />
 <div class="container">
 
@@ -20,14 +65,24 @@
             </div>
         </div>
         <div class="form-group row">
-            <h4> <label asp-for="City" class="col-sm-4 control-label">Город</label></h4>
-            <div class="col-sm-8">
-                <select asp-for="City" style="width: 200px;height: 34px" asp-items="Html.GetEnumSelectList<City>()"></select>
-                <span asp-validation-for="City" class="text-danger"></span>
-            </div>
+            <h4> <label asp-for="City" class="col-sm-4 control-label">@Localizer["Город"]</label></h4>
+           
+                <div class="col-sm-8" id="app">
+                    <select asp-for="City" style="width: 200px; height: 34px" v-model="selectedCity" name="selectedCity">
+                        <option value="" disabled selected>
+                            @Localizer["Город"]
+                        </option>
+                        <option v-for="city in cities" v-bind:value="city">
+                            {{city}}
+                        </option>
+                    </select>
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+            
+           
         </div>
         <div class="form-group row">
-            <h4> <label asp-for="Category" class="col-sm-4 control-label">Категория</label></h4>
+            <h4> <label asp-for="Category" class="col-sm-4 control-label">@Localizer["Категория"]</label></h4>
             <div class="col-sm-8">
                 <select asp-for="Category" style="width: 200px;height: 34px" asp-items="Html.GetEnumSelectList<Categor>()"></select>
                 <span asp-validation-for="Category" class="text-danger"></span>
@@ -41,7 +96,7 @@
             </div>
         </div>
         <div class="form-group row">
-            <h4><label asp-for="Price" class="control-label col-sm-2">Цена</label></h4>
+            <h4><label asp-for="Price" class="control-label col-sm-2">@Localizer["Цена"]</label></h4>
             <div class=" col-sm-10">
                 <input asp-for="Price" class="form-control col-2" />
                 <span asp-validation-for="Price" class="text-danger"></span>
@@ -57,60 +112,120 @@
         <div class="form-group form-check row">
             <h5>
                 <label class="form-check-label col-sm-12">
-                    <input class="form-check-input" asp-for="IsNegotiatedPrice" /> Договорная цена
+                    <input class="form-check-input" asp-for="IsNegotiatedPrice" />@Localizer["Договорная цена"]
                 </label>
             </h5>
         </div>
         <div class="form-group">
-            <h4><label asp-for="Description" class="control-label">Описание</label></h4>
+            <h4><label asp-for="Description" class="control-label">@Localizer["Описание"]</label></h4>
             <textarea asp-for="Description" class="form-control" style="height: 200px; width: 450px;resize: none"></textarea>
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
 
 
-        <div class="form-group row">
-            <h4><label asp-for="Photos" class="col-sm-2 control-label">Изображение</label></h4>
-            <div class="col-sm-10">
-                <div class="custom-file col-6">
-                    <input multiple asp-for="Photos" class="form-control custom-file-input" />
-                    <label class="custom-file-label">Выберите фото</label>
-                    <span asp-validation-for="Photos" class="text-danger "></span>
-                </div>
-                <div class="text-danger mt-1">
-                    Для выбора нескольких фото зажмите CTRL
-                </div>
+        <div class="form-group">
+            <h4><label class="col-sm-2 control-label">@Localizer["Изображение"]</label></h4>
+
+            <div class="dropzone" id="image-upload">
+                @*<input class="d-none" asp-for="Photos" />*@
             </div>
+            @*<div class="col-sm-10">
+                    <div class="custom-file col-6">
+                        <input multiple asp-for="Photos" class="form-control custom-file-input" id="image" />
+                        <label class="custom-file-label">Выберите фото</label>
+                        <span asp-validation-for="Photos" class="text-danger "></span>
+                    </div>
+                    <div class="text-danger mt-1">
+                        Для выбора нескольких фото зажмите CTRL
+                    </div>
+                </div>*@
         </div>
 
         <div class="form-group">
-            <input type="submit" value="Создать" class="btn btn-primary" />
+            <input type="submit" value="@Localizer["Создать"]" class="btn btn-primary" />
         </div>
+
         @section Scripts
         {
             @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-            <script>
-                $(document).ready(function () {
-                    $('.custom-file-input').on("change", function () {
-                        var fileLabel = $(this).next('.custom-file-label');
-                        var files = $(this)[0].files;
-                        if (files.length > 1 && files.length < 6) {
-                            fileLabel.html(files.length + ' выбрано фото');
-                        } else if (files.length === 1) {
-                            fileLabel.html(files[0].name);
-                        }
-                        else {
-                            fileLabel.html('Выберите до 6 фото');
-                        }
+
+            @*<script>
+                    $(document).ready(function () {
+                        $('.custom-file-input').on("change", function () {
+                            var fileLabel = $(this).next('.custom-file-label');
+                            var files = $(this)[0].files;
+                            if (files.length > 1 && files.length < 6) {
+                                fileLabel.html(files.length + ' выбрано фото');
+                            } else if (files.length === 1) {
+                                fileLabel.html(files[0].name);
+                            }
+                            else {
+                                fileLabel.html('Выберите до 6 фото');
+                            }
+                        });
                     });
+                </script>*@
+
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/min/dropzone.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-gallery/2.25.2/js/blueimp-gallery.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+
+            <script>
+
+                Dropzone.autoDiscover = false;
+                document.addEventListener("DOMContentLoaded",
+                    () => {
+                        var mydropzone = new window.Dropzone("div#image-upload",
+                            {
+                                dictDefaultMessage: "@Localizer["Кликните тут что бы загрузить изображение"]",
+                                method: "post",
+                                url: "https://localhost:44321/Images/Upload",
+                                paramName: "files",
+                                maxFilesize: 3,
+                                maxFiles: 6,
+                                addRemoveLinks: true
+                            });
+
+                        mydropzone.on("success", function (file, response) {
+                                var x = document.createElement("INPUT");
+                                x.setAttribute("value", response);
+                                x.setAttribute("name", 'Photos');
+                                document.querySelector('#image-upload').appendChild(x).style.visibility = "hidden";
+                            }
+                        );
+
+                    }
+                );
+
+            </script>
+            
+            <environment include="Development">
+                <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+            </environment>
+            <environment exclude="Development">
+                <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+            </environment>
+            <script>
+                var app = new Vue({
+                    el: '#app',
+                    data: {
+                        selectedCity: '',
+                        cities: [
+                            '@Localizer["Винница"]', '@Localizer["Днепр"]', '@Localizer["Донецк"]', '@Localizer["Житомир"]', '@Localizer["Запорожье"]', '@Localizer["ИваноФранковск"]', '@Localizer["Киев"]', '@Localizer["Кропивницкий"]', '@Localizer["Луганск"]', '@Localizer["Луцк"]', '@Localizer["Львов"]',
+                            '@Localizer["Николаев"]', '@Localizer["Одесса"]', '@Localizer["Полтава"]', '@Localizer["Ровно"]', '@Localizer["Сумы"]', '@Localizer["Тернополь"]', '@Localizer["Ужгород"]', '@Localizer["Харьков"]', '@Localizer["Херсон"]', '@Localizer["Хмельницкий"]', '@Localizer["Черкассы"]', '@Localizer["Чернигов"]', '@Localizer["Черновцы"]'
+                        ]
+                    }
+
                 });
             </script>
         }
+
     </form>
 </div>
 
-
 <div>
-    <a asp-action="Index">На главную страницу</a>
+    <a asp-action="Index">@Localizer["На главную страницу"]</a>
 </div>
 
 

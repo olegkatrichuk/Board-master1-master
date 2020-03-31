@@ -29,8 +29,8 @@ namespace MyBoard.Controllers
       ser.Construct(b1);
       ServiceConfig p = b1.GetResult();
 
-      MyService my = new MyService(p);
-      my.CreateBackup();
+      BackupService backup = new BackupService(p);
+      backup.CreateBackup();
 
       return View();
     }

@@ -7,7 +7,7 @@ namespace Board.Models
 {
   public enum Categor
   {
-    Нет,
+    Все,
     Недвижимость,
     Транспорт,
     Работа,

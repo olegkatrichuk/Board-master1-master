@@ -1,5 +1,8 @@
 ﻿@using Board.Models
+@using Microsoft.Extensions.Options
+@using MyBoard.Models
 @model MyBoard.Models.IndexViewModel
+@inject IOptions<AzureStorageConfig> Settings
 
 @{
     ViewData["Title"] = "Search";
@@ -14,11 +17,11 @@
 
         if (i > 0 && i % 3 == 0)
         {
-            @:</div><div class="row">
+        @:</div><div class="row">
         }
         <div class="card p-3 m-3 " style="width: 21rem; ">
             <div class="card-img-top">
-                @{ var photoPath = "~/images/" + (item.AdvertPhotos[0].PhotoPath ?? "noimage.jpg"); }
+                @{ var photoPath = "https://" + Settings.Value.AccountName + ".blob.core.windows.net/" + Settings.Value.ImageContainer + "/" + (item.AdvertPhotos[0].PhotoPath ?? "noimage.jpg"); }
                 <img class="rounded img-fluid" src="@photoPath" asp-append-version="true" style="max-width: 320px; max-height: 200px;" />
             </div>
             <div class="card-inner">

@@ -1,10 +1,55 @@
 ﻿@using Board.Migrations
+@using Microsoft.Extensions.Options
+@using MyBoard.Models
 @using City = MyBoard.Models.City
 @model MyBoard.ViewModels.AdvertEditViewModel
 
+@inject IOptions<AzureStorageConfig> Settings
 @{
     ViewData["Title"] = "Edit";
 }
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/min/dropzone.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/blueimp-gallery/2.25.2/css/blueimp-gallery.min.css" crossorigin="anonymous">
+<style>
+    html {
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    }
+
+    main {
+        margin: 20px;
+    }
+
+    #gallery-note {
+        font-size: smaller
+    }
+
+    .blueimp-gallery {
+        margin: 25px;
+        max-width: 150px;
+        padding-bottom: 150px;
+    }
+
+    .dropzone {
+        border: 3px dashed #00a1f1;
+        background: #F0F8FF;
+        margin: 25px;
+        border-radius: 5px;
+        max-width: 400px;
+    }
+
+    .dropzone .dz-message {
+            font-weight:300;
+        }
+
+    .dropzone .dz-message .note {
+        font-family: sans-serif;
+        font-size: 18px;
+        font-weight: 200;
+        display: block;
+        margin-top: 1.5rem;
+    }
+</style>
 
 <h1>Редактировать ваше обьявление</h1>
 
@@ -20,13 +65,13 @@
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
         </div>
-        <div class="form-group row">
+        @*<div class="form-group row">
             <h4> <label asp-for="City" class="col-sm-4 control-label">Город</label></h4>
             <div class="col-sm-8">
                 <select asp-for="City" style="width: 200px;height: 34px" asp-items="Html.GetEnumSelectList<City>()"></select>
                 <span asp-validation-for="City" class="text-danger"></span>
             </div>
-        </div>
+        </div>*@
         <div class="form-group row">
             <h4> <label asp-for="Category" class="col-sm-4 control-label">Категория</label></h4>
             <div class="col-sm-8">
@@ -72,10 +117,10 @@
             @for (var index = 0; index < Model.ImageStrings.Count; index++)
             {
                 var item = Model.ImageStrings[index];
-                var photoPath = "~/images/" + (item ?? "noimage.jpg");
+                var photoPath = "https://" + Settings.Value.AccountName + ".blob.core.windows.net/" + Settings.Value.ImageContainer + "/" + (item ?? "noimage.jpg");
                 <img src="@photoPath" asp-append-version="true" style="width: 200px; height: 200px" class="m-2" />
                 <div class="form-check m-2">
-                    <input class="form-check-input" type="checkbox"  value="@item" asp-for="@Model.PhotoUrlToDelete[index]" />
+                    <input class="form-check-input" type="checkbox" value="@item" asp-for="@Model.PhotoUrlToDelete[index]" />
                     <label class="form-check-label">
                         Удалить
                     </label>
@@ -84,18 +129,84 @@
             }
 
         </div>
-        <div class="form-group row">
-            <h4><label asp-for="Photos" class="col-sm-2 control-label">Изображение</label></h4>
-            <div class="col-sm-10">
+        <div class="form-group">
+            <h4><label class="col-sm-2 control-label">Изображение</label></h4>
+
+
+            <div class="dropzone " id="image-upload">
+
+            </div>
+            @*<div class="col-sm-10">
                 <div class="custom-file col-6">
                     <input multiple asp-for="Photos" class="form-control custom-file-input" />
                     <label class="custom-file-label">Выберите новое фото</label>
                 </div>
-            </div>
+            </div>*@
         </div>
         <div class="form-group">
             <input type="submit" value="Сохранить" class="btn btn-primary" />
         </div>
+
+        @section Scripts {
+
+            @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/min/dropzone.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-gallery/2.25.2/js/blueimp-gallery.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+
+            <script>
+
+                Dropzone.autoDiscover = false;
+                document.addEventListener("DOMContentLoaded",
+                    () => {
+                        var mydropzone = new window.Dropzone("div#image-upload",
+                            {
+                                dictDefaultMessage: "Кликните тут что бы загрузить изображение",
+                                method: "post",
+                                url: "https://localhost:44321/Images/Upload",
+                                paramName: "files",
+                                maxFilesize: 3,
+                                maxFiles: 6,
+                                addRemoveLinks: true
+                            });
+
+                        mydropzone.on("success", function (file, response) {
+
+                            var x = document.createElement("INPUT");
+                            x.setAttribute("value", response);
+                            x.setAttribute("name", 'Photos');
+                            document.querySelector('#image-upload').appendChild(x).style.visibility = "hidden";
+
+                        }
+                        );
+
+                    }
+                );
+
+            </script>
+
+
+            @*<script>
+                $(document).ready(function () {
+                    $('.custom-file-input').on("change", function () {
+                        var fileLabel = $(this).next('.custom-file-label');
+                        var files = $(this)[0].files;
+                        if (files.length > 1 && files.length < 6) {
+                            fileLabel.html(files.length + ' выбрано фото');
+                        } else if (files.length === 1) {
+                            fileLabel.html(files[0].name);
+                        } else {
+                            fileLabel.html('Выберите до 6 фото');
+                        }
+                    });
+                });
+            </script>*@
+        }
+
+
     </form>
 </div>
 
@@ -103,22 +214,3 @@
     <a asp-action="Index">На главную страницу</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-
-    <script>
-        $(document).ready(function () {
-            $('.custom-file-input').on("change", function () {
-                var fileLabel = $(this).next('.custom-file-label');
-                var files = $(this)[0].files;
-                if (files.length > 1 && files.length < 6) {
-                    fileLabel.html(files.length + ' выбрано фото');
-                } else if (files.length === 1) {
-                    fileLabel.html(files[0].name);
-                } else {
-                    fileLabel.html('Выберите до 6 фото');
-                }
-            });
-        });
-    </script>
-}

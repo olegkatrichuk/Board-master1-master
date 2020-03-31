@@ -8,19 +8,20 @@ using Microsoft.AspNetCore.Http;
 
 namespace MyBoard
 {
-    public static class UploadImageUtilities
+  public static class UploadImageUtilities
+  {
+
+    public static string UploadImage(this IFormFile file, string outputPath)
     {
-
-        public static string UploadImage(this IFormFile file, string outputPath)
-        {
-            IFileManager fileManager = new LocalFileManager();
-            return fileManager.UploadFile(outputPath, file);
-        }
-
-        public static void DeleteImage(string outputPath)
-        {
-            IFileManager fileManager = new LocalFileManager();
-            fileManager.DeleteFile(outputPath);
-        }
+      IFileManager fileManager = new LocalFileManager();
+      return fileManager.UploadFile(outputPath, file);
     }
+
+    public static void DeleteImage(string outputPath)
+    {
+      IFileManager fileManager = new LocalFileManager();
+      fileManager.DeleteFile(outputPath);
+    }
+
+  }
 }

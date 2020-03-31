@@ -1,0 +1,92 @@
+﻿
+@using (Html.BeginForm("UploadAsyn", "Home", FormMethod.Post, new {enctype = "multipart/form-data"}))
+{
+    @*<form asp-action="UploadAsync" asp-controller="Home" method="post" enctype="multipart/form-data">*@
+    <div class="fileUpload btn btn-primary">
+        <span>Select Files</span><input type="file" id="file" name="selectFiles" class="upload" onchange="DisplayFilesToUpload()" multiple/>
+    </div>
+        @* This gets populated from the DisplayFilesToUpload() JS function*@
+    <p id="FilesToUpload"></p>
+} 
+
+@*loops through all files and displays three items:
+    - The Image (159x159) - [Set in .thumb css class]
+    - A delete icon (30X30) - [Set in .deleteDiv css class] (~/Images/deleteImage.png) that calls deleteImage JS function
+    - A DeleteAll button if there are any items that calls the DeleteAll controller Action*@
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var item in Model)
+    {
+        <div class="imageBlock">
+            <a href="@item" target="_blank"><img class="thumb" src="@item" alt="images" /></a><br />
+            <div class="deleteDiv"><img class="deleteIcon" src="~/images/deleteImage.png" title="Delete Image" onclick="deleteImage('@item');" /></div>
+        </div>
+    }
+
+    using (Html.BeginForm("DeleteAll", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="fileUpload btn btn-danger"><span>Delete All Files</span><input type="submit" name="deleteAll" class="upload" /></div>
+    }
+}
+
+<script>
+    //Calls async Task<ActionResult> DeleteImage(string name) in the HomeController and Refreshes the page
+    function deleteImage(item) {
+        var url = "/Home/DeleteImage";
+        $.post(url,
+            { Name: item },
+            function (data) {
+                window.location.href = "/Home/BlobImages";
+            });
+    }
+
+    //Lists the file name and size for all files to be uploaded by updating the <p id="FilesToUpload"></p> control
+    function DisplayFilesToUpload() {
+        var element = document.getElementById("file");
+        var html = "";
+
+        html = "<h3>Image(s) to Upload</h3>";
+        for (var i = 0; i < element.files.length; i++) {
+            html += "<strong>" + (i + 1) + "</strong>. File: ";
+            var file = element.files[i];
+            if ('name' in file) {
+                html += file.name + " (";
+            }
+            if ('size' in file) {
+                html += "size: " + file.size + " bytes)<br>";
+            }
+        }
+
+        html +=
+            "<div class='fileUpload btn btn-info'><span>Upload</span><input type='submit' class='upload' value='Upload' /></div>";
+        document.getElementById("FilesToUpload").innerHTML = html;
+
+        $(document).ready(function (e) {
+            $('#FilesToUpload').on('submit',(function(e) {
+                e.preventDefault(); // делаем отмену действия браузера и формируем ajax
+                var formData = new FormData($('#FilesToUpload')[0]);
+                // данные с формы завернем в переменную для ajax
+
+                $.ajax({
+                    type:'POST', // тип запроса
+                    url:"https://localhost:44321/home/UploadAsyn", // куда будем отправлять, можно явно указать
+                    data:formData, // данные, которые передаем
+                    cache:false, // кэш и прочие настройки писать именно так (для файлов)
+                    // (связано это с кодировкой и всякой лабудой)
+                    contentType: false, // нужно указать тип контента false для картинки(файла)
+                    processData: false, // для передачи картинки(файла) нужно false 
+                    success:function(data){ // в случае успешного завершения
+                        console.log("Завершилось успешно"); // выведем в консоли успех 
+                        console.log(data); // и что в ответе получили, если там что-то есть
+                    },
+                    error: function(data){ // в случае провала
+                        console.log("Завершилось с ошибкой"); // сообщение об ошибке
+                        console.log(data); // и данные по ошибке в том числе
+                    }
+                });
+            }));  
+        });
+
+    }
+
+</script>

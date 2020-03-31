@@ -7,7 +7,7 @@ namespace Board.Models
 {
   public enum ProductNew
   {
-    Новый,
+    Нов,
     Бy
   }
 }

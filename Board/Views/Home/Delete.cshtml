@@ -1,11 +1,13 @@
-﻿@model MyBoard.Models.Advert
-
+﻿@using Microsoft.Extensions.Options
+@using MyBoard.Models
+@model MyBoard.Models.Advert
+@inject IOptions<AzureStorageConfig> Settings
 @{
     ViewData["Title"] = "Delete";
     var photoPath = "";
     if (Model.AdvertPhotos.Any())
     {
-        photoPath = "~/images/" + (Model.AdvertPhotos[0].PhotoPath);
+        photoPath = "https://" + Settings.Value.AccountName + ".blob.core.windows.net/" + Settings.Value.ImageContainer + "/" + (Model.AdvertPhotos[0].PhotoPath);
     }
     else
     {
@@ -57,7 +59,7 @@
             @Html.DisplayFor(model => model.Description)
         </dd>
         <dd>
-            <img class="rounded" src="@photoPath" asp-append-version="true" style="width: 100px; height: 100px" />
+            <img class="rounded" src="@photoPath" asp-append-version="true" style="width: 250px; height: 250px" />
         </dd>
 
     </dl>

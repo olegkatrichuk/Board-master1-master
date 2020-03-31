@@ -134,11 +134,15 @@
     <comment>Подать обьявление</comment>
   </data>
   <data name="Message4" xml:space="preserve">
-    <value>Моi оголошення</value>
+    <value>Мої оголошення</value>
     <comment>Мои обьявления</comment>
   </data>
   <data name="Выйти" xml:space="preserve">
     <value>Вийти</value>
     <comment>Вийти</comment>
+  </data>
+  <data name="поддержка" xml:space="preserve">
+    <value>підтримка</value>
+    <comment>підтримка</comment>
   </data>
 </root>

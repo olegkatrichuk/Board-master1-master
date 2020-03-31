@@ -7,10 +7,10 @@ using System.IO.Compression;
 
 namespace MyBoard
 {
-    public class MyService
+    public class BackupService
     {
         private readonly ServiceConfig _serviceConfigServiceConfig;
-        public MyService(ServiceConfig serviceConfigServiceConfig)
+        public BackupService(ServiceConfig serviceConfigServiceConfig)
         {
             _serviceConfigServiceConfig = serviceConfigServiceConfig;
         }

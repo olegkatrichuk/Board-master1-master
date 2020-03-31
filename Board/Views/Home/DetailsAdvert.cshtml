@@ -1,70 +1,85 @@
 ﻿@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.Extensions.Options
+@using MyBoard.Models
 @model MyBoard.ViewModels.AdvertEditViewModel
+
+@inject IOptions<AzureStorageConfig> Settings
 @{
     ViewData["Title"] = "DetailsAdvert";
-    //var photoPath = "~/images/" + (Model.AdvertPhotos[0].PhotoPath ?? "noimage.jpg");
 }
 
-<h1>Обьявление</h1>
+<link href="~/dist/css/lightbox.css" rel="stylesheet" />
 
-<div class="container">
+<style>
+    .image img {
+        transition: 0.5s;
+    }
+
+    .image img:hover {
+        transform: scale(2.2);
+    }
+</style>
+
+<h1 class="text-center">Обьявление</h1>
+
+<div class="container ">
 
     <hr />
     <dl class="row">
-
+         
         <dt class="col-sm-2">
-            <label asp-for="Title" class="col-sm-2 control-label text-left">Заголовок</label>
+            <label asp-for="Title" class="col-sm-2 control-label text-center">Заголовок</label>
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10 text-center">
             @Html.DisplayFor(model => model.Title)
         </dd>
         <dt class="col-sm-2">
-            <label asp-for="Category" class="col-sm-4 control-label text-left">Категория</label>
+            <label asp-for="Category" class="col-sm-4 control-label text-center">Категория</label>
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10 text-center">
             @Html.DisplayFor(model => model.Category)
         </dd>
         <dt class="col-sm-2">
-            <label asp-for="ProductIsNew" class="control-label col-sm-4 text-left">Товар</label>
+            <label asp-for="ProductIsNew" class="control-label col-sm-4 text-center">Товар</label>
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10 text-center">
             @Html.DisplayFor(model => model.ProductIsNew)
         </dd>
         <dt class="col-sm-2">
-            <label asp-for="Price" class="control-label col-sm-2 text-left">Цена</label>
+            <label asp-for="Price" class="control-label col-sm-2 text-center">Цена</label>
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10 text-center">
             @Html.DisplayFor(model => model.Price)
         </dd>
-        <dt class="col-sm-2">
-            <label asp-for="IsNegotiatedPrice" class="control-label text-left">Договорная цена</label>
+        <dt class="col-sm-2 ">
+            <label asp-for="IsNegotiatedPrice" class="control-label col-sm-2 text-center">Договорная цена</label>
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10 text-center">
             @Html.DisplayFor(model => model.IsNegotiatedPrice)
         </dd>
-        <dt class="col-sm-2">
-            <label asp-for="Description" class="control-label text-left">Описание</label>
+        <dt class="col-sm-2 ">
+            <label asp-for="Description" class="control-label col-sm-2 text-center">Описание</label>
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10 text-center">
             @Html.DisplayFor(model => model.Description)
         </dd>
-        <dt class="col-sm-2">
-            <label asp-for="City" class="control-label text-left ">Город</label>
+        <dt class="col-sm-2 ">
+            <label asp-for="City" class="control-label col-sm-2  text-center ">Город</label>
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10 text-center">
             @Html.DisplayFor(model => model.City)
         </dd>
-        <dt class="col-sm-2">
-            <label asp-for="Phone" class="control-label text-left">Телефон</label>
+        <dt class="col-sm-2 ">
+            <label asp-for="Phone" class="control-label col-sm-2 text-center">Телефон</label>
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10 text-center">
             @Html.DisplayFor(model => model.Phone)
         </dd>
-        <dd >
+        <dd class="image rounded mx-auto d-block">
             @foreach (var item in Model.ImageStrings)
             {
-                var photoPath = "~/images/" + (item ?? "noimage.jpg");
-                <img src="@photoPath" asp-append-version="true" style="width: 200px; height: 200px" class="m-2" />
+                var photoPath = "https://" + Settings.Value.AccountName + ".blob.core.windows.net/" + Settings.Value.ImageContainer + "/" + (item ?? "noimage.jpg");
+                <a href="#"><img src="@photoPath" asp-append-version="true" style="width: 200px; height: 200px" class="m-2" /></a>
                 <hr />
             }
         </dd>
@@ -76,5 +91,6 @@
 
 @section Scripts
 {
-    
+
+    <script src='~/dist/js/lightbox-plus-jquery.js'></script>
 }
