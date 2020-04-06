@@ -1,7 +1,7 @@
 ﻿@using System.Globalization
 @using Board.Migrations
 @using MyBoard.Models
-@using City = MyBoard.Models.City
+
 @model MyBoard.ViewModels.AdvertCreateViewModel
 @inject IViewLocalizer Localizer
 
@@ -64,22 +64,45 @@
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
         </div>
-        <div class="form-group row">
-            <h4> <label asp-for="City" class="col-sm-4 control-label">@Localizer["Город"]</label></h4>
-           
-                <div class="col-sm-8" id="app">
-                    <select asp-for="City" style="width: 200px; height: 34px" v-model="selectedCity" name="selectedCity">
-                        <option value="" disabled selected>
-                            @Localizer["Город"]
-                        </option>
-                        <option v-for="city in cities" v-bind:value="city">
-                            {{city}}
-                        </option>
+        <div class="form-group">
+            <h4><label asp-for="City" class="col-sm-4 control-label">@Localizer["Город"]</label></h4>
+            @if (CultureInfo.CurrentUICulture.Name == "ru")
+            {
+                <div class="col-sm-8 row">
+                    <select style="width: 200px; height: 34px; margin-left: 15px" id="cityselect" name="cityselect">
+                        <option value='0'>@Localizer["Выберите город"]</option>
+                        @foreach (var citi in ViewBag.All)
+                        {
+                            <option value="@citi.Id">@citi.Name</option>
+                        }
+                    </select>
+                </div>
+                <h4><label asp-for="City" class="col-sm-4 control-label mt-3">@Localizer["Район"]</label></h4>
+                <div class="col-sm-8">
+                    <select id="town_calck" disabled="disabled" style="width: 200px; height: 34px" class="row ml-1">
                     </select>
                     <span asp-validation-for="City" class="text-danger"></span>
                 </div>
-            
-           
+            }
+            else
+            {
+                <div class="col-sm-8 ">
+                    <select asp-for="City" style="width: 200px;height: 34px" id="cityselectua" name="cityselectua">
+                        <option value='0'>@Localizer["Выберите город"]</option>
+                        @foreach (var citi in ViewBag.All)
+                        {
+                            <option value="@citi.Id">@citi.NameUa</option>
+                        }
+                    </select>
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+                <h4> <label asp-for="City" class="col-sm-4 control-label mt-3">@Localizer["Район"]</label></h4>
+                <div class="col-sm-8">
+                    <select id="town_calckua" disabled="disabled" style="width: 200px; height: 34px" class="row ml-1">
+                    </select>
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+            }
         </div>
         <div class="form-group row">
             <h4> <label asp-for="Category" class="col-sm-4 control-label">@Localizer["Категория"]</label></h4>
@@ -166,6 +189,39 @@
                     });
                 </script>*@
 
+            <script>
+                $(document).ready(function () {
+                    $('#cityselect').change(function () {
+                        $('#town_calck').attr('disabled', true);
+                        var idVal = $('#cityselect').val();
+                        $.post("/Region/GetRegion", { id: idVal }, function (data) {
+                            $('#town_calck').attr('disabled', false);
+                            for (var i = 0; i < data.length; i++) {
+                                $("#town_calck").append(
+                                    $('<option></option>').val(data[i].id).text(data[i].subName));
+                            }
+                           
+                        });
+                    });
+                });
+            </script>
+            <script>
+                $(document).ready(function () {
+                    $('#cityselectua').change(function () {
+                        $('#town_calckua').attr('disabled', true);
+                        var idVal = $('#cityselectua').val();
+                        $.post("/Region/GetRegion", { id: idVal }, function (data) {
+                            $('#town_calckua').attr('disabled', false);
+                            for (var i = 0; i < data.length; i++) {
+                                $("#town_calckua").append(
+                                    $('<option></option>').val(data[i].id).text(data[i].subNameUa));
+                            }
+                           
+                        });
+                    });
+                });
+            </script>
+
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/min/dropzone.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-gallery/2.25.2/js/blueimp-gallery.min.js"></script>
@@ -199,26 +255,7 @@
                 );
 
             </script>
-            
-            <environment include="Development">
-                <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-            </environment>
-            <environment exclude="Development">
-                <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
-            </environment>
-            <script>
-                var app = new Vue({
-                    el: '#app',
-                    data: {
-                        selectedCity: '',
-                        cities: [
-                            '@Localizer["Винница"]', '@Localizer["Днепр"]', '@Localizer["Донецк"]', '@Localizer["Житомир"]', '@Localizer["Запорожье"]', '@Localizer["ИваноФранковск"]', '@Localizer["Киев"]', '@Localizer["Кропивницкий"]', '@Localizer["Луганск"]', '@Localizer["Луцк"]', '@Localizer["Львов"]',
-                            '@Localizer["Николаев"]', '@Localizer["Одесса"]', '@Localizer["Полтава"]', '@Localizer["Ровно"]', '@Localizer["Сумы"]', '@Localizer["Тернополь"]', '@Localizer["Ужгород"]', '@Localizer["Харьков"]', '@Localizer["Херсон"]', '@Localizer["Хмельницкий"]', '@Localizer["Черкассы"]', '@Localizer["Чернигов"]', '@Localizer["Черновцы"]'
-                        ]
-                    }
 
-                });
-            </script>
         }
 
     </form>

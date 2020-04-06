@@ -4,14 +4,16 @@ using Board.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Board.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200403104207_state")]
+    partial class state
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -315,10 +317,10 @@ namespace Board.Migrations
                     b.Property<int>("CitiId")
                         .HasColumnType("int");
 
-                    b.Property<string>("SubName")
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SubNameUa")
+                    b.Property<string>("NameUa")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

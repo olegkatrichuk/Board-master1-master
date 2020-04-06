@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using Azure.Storage;
 using Azure.Storage.Blobs;
 using Board.Models;
@@ -35,13 +36,15 @@ namespace MyBoard.Controllers
   {
     private readonly IWebHostEnvironment _hostEnvironment;
     private readonly IConfiguration _configuration;
+    private readonly IMapper _mapper;
     private readonly AzureStorageConfig _storageConfig;
     private readonly AppDbContext _context;
 
-    public HomeController(AppDbContext context, IWebHostEnvironment hostEnvironment, IConfiguration configuration, IOptions<AzureStorageConfig> config)
+    public HomeController(AppDbContext context, IWebHostEnvironment hostEnvironment, IConfiguration configuration, IOptions<AzureStorageConfig> config,IMapper mapper)
     {
       _hostEnvironment = hostEnvironment;
       _configuration = configuration;
+      _mapper = mapper;
       _context = context;
       _storageConfig = config.Value;
     }
@@ -81,20 +84,32 @@ namespace MyBoard.Controllers
     [Authorize]
     public IActionResult Create()
     {
+      List<TreeViewNode> nodes = new List<TreeViewNode>();
+
+      foreach (Citi type in _context.Citi)
+      {
+        nodes.Add(new TreeViewNode { Id = type.Id, Parent = "#", Name = type.Name, NameUa = type.NameUa});
+      }
+
+      //foreach (State subType in _context.States)
+      //{
+      //  nodes.Add(new TreeViewNode { Id = subType.Id, Parent = subType.CitiId.ToString()});
+      //}
+
+      ViewBag.All = nodes;
       return View();
     }
 
     [HttpPost]
     [Authorize]
-    public IActionResult Create(AdvertCreateViewModel model, City? selectedCity)
+    public IActionResult Create(AdvertCreateViewModel model)
     {
       if (ModelState.IsValid)
       {
         List<AdvertPhoto> listPath = new List<AdvertPhoto>();
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        model.City = selectedCity;
-
-        Advert newAdvert = new Advert
+        
+        AdvertViewModel newAdvert = new AdvertViewModel
         {
           UserId = userId,
           Title = model.Title,
@@ -118,10 +133,10 @@ namespace MyBoard.Controllers
         }
 
         newAdvert.AdvertPhotos = listPath;
-
-        _context.Adverts.Add(newAdvert);
+        var result = _mapper.Map<Advert>(newAdvert);
+        _context.Adverts.Add(result);
         _context.SaveChanges();
-        return RedirectToAction("Details", "Home", new { newAdvert.Id });
+        return RedirectToAction("Details", "Home", new { result.Id });
       }
 
       return View();
@@ -360,29 +375,28 @@ namespace MyBoard.Controllers
         return RedirectToAction("Index", "Home");
       }
     
-      City city = (City)System.Enum.Parse(typeof(City), selectedCity);
-
       var result = _context.Adverts.OrderByDescending(x => x.DateStartTime).Include(c => c.AdvertPhotos);
       int pageSize = 9;
 
       string str1 = keyword.Remove(2);
       string str2 = keyword.Substring(1, keyword.Length - 1);
 
-      var product = result.Where(t => t.Title.StartsWith(str1) || t.Title.EndsWith(str2) || t.Title.Contains(keyword)).Where(p => p.Cities == city);
+      var product = result.Where(t => t.Title.StartsWith(str1) || t.Title.EndsWith(str2) || t.Title.Contains(keyword)).Where(p => p.Cities.ToString()==selectedCity);
 
-      var count = await product.CountAsync();
-      var items = await product.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+      //var count = await product.CountAsync();
+      //var items = await product.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
-      PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
-      IndexViewModel viewModel = new IndexViewModel
-      {
-        PageViewModel = pageViewModel,
-        Adverts = items
-      };
+      //PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
+      //IndexViewModel viewModel = new IndexViewModel
+      //{
+      //  PageViewModel = pageViewModel,
+      //  Adverts = items
+      //};
 
       ViewBag.citykeyword = selectedCity;
       ViewBag.keyword = keyword;
-      return View(viewModel);
+      //return View(viewModel);
+      return View();
     }
 
     [AllowAnonymous]

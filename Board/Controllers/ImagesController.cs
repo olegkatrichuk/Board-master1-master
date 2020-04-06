@@ -52,25 +52,12 @@ namespace MyBoard.Controllers
 
         foreach (var formFile in files)
         {
-          var thumbnailWidth = 320;
-          var extension = Path.GetExtension(formFile.FileName);
-          var encoder = GetEncoder(extension);
-
+          
           if (StorageHelper.IsImage(formFile))
           {
             if (formFile.Length > 0)
             {
-              await using Stream stream = formFile.OpenReadStream();
-              await using var output = new MemoryStream();
-              using Image image = Image.Load(stream);
-              var divisor = image.Width / thumbnailWidth;
-              var height = Convert.ToInt32(Math.Round((decimal)(image.Height / divisor)));
-
-              image.Mutate(x => x.Resize(thumbnailWidth, height));
-              image.Save(output, encoder);
-              output.Position = 0;
-
-              isUploaded = await StorageHelper.UploadFileToStorage(output, formFile.FileName, _storageConfig);
+              isUploaded = await StorageHelper.UploadFileToStorage(formFile.OpenReadStream(), formFile.FileName, _storageConfig);
             }
           }
           else
@@ -91,39 +78,6 @@ namespace MyBoard.Controllers
         return BadRequest(ex.Message);
       }
     }
-
-    private static IImageEncoder GetEncoder(string extension)
-    {
-      IImageEncoder encoder = null;
-
-      extension = extension.Replace(".", "");
-
-      var isSupported = Regex.IsMatch(extension, "gif|png|jpe?g", RegexOptions.IgnoreCase);
-
-      if (isSupported)
-      {
-        switch (extension)
-        {
-          case "png":
-            encoder = new PngEncoder();
-            break;
-          case "jpg":
-            encoder = new JpegEncoder();
-            break;
-          case "jpeg":
-            encoder = new JpegEncoder();
-            break;
-          case "gif":
-            encoder = new GifEncoder();
-            break;
-          default:
-            break;
-        }
-      }
-
-      return encoder;
-    }
-
 
   }
 }

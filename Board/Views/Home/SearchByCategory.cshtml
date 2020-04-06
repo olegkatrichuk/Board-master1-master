@@ -3,11 +3,12 @@
 @using MyBoard.Models
 @model MyBoard.Models.IndexViewModel
 @inject IOptions<AzureStorageConfig> Settings
+@inject IViewLocalizer Localizer
 @{
     ViewData["Title"] = "SearchByCategory";
 }
 
-<h1>Поиск по @ViewBag.keyword</h1>
+<h1 class="text-center">@Localizer["Список обьявлений"]</h1>
 
 <div class="container  align-self-center " style="display: flex">
     @{ int i = 3;}
@@ -31,7 +32,7 @@
                     </h2>
                 </div>
                 <div class="row card-footer justify-content-center">
-                    <a asp-controller="Home" asp-action="DetailsAdvert" asp-route-id="@item.Id" class="btn btn-info">подробнее</a>
+                    <a asp-controller="Home" asp-action="DetailsAdvert" asp-route-id="@item.Id" class="btn btn-info">@Localizer["подробнее"]</a>
                 </div>
             </div>
         </div>

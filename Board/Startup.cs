@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using AutoMapper;
 using Board.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -41,6 +42,7 @@ namespace MyBoard
         options.Cookie.IsEssential = true;
       });
 
+      
       services.AddOptions();
       services.Configure<AzureStorageConfig>(Configuration.GetSection("AzureStorageConfig"));
 
@@ -134,6 +136,9 @@ namespace MyBoard
 
       services.AddSingleton<IAuthorizationHandler, CanEditOnlyOtherAdminRolesAndClaimsHandler>();
       services.AddSingleton<IAuthorizationHandler, SuperAdminHandler>();
+
+      services.AddAutoMapper(typeof(AutoMapping));
+
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

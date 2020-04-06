@@ -4,14 +4,16 @@ using Board.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Board.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200402080312_Translate")]
+    partial class Translate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -238,13 +240,15 @@ namespace Board.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(1000)")
+                        .HasMaxLength(1000);
 
                     b.Property<bool>("IsNegotiatedPrice")
                         .HasColumnType("bit");
 
                     b.Property<string>("Phones")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(30)")
+                        .HasMaxLength(30);
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
@@ -253,7 +257,9 @@ namespace Board.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -303,29 +309,6 @@ namespace Board.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Citi");
-                });
-
-            modelBuilder.Entity("MyBoard.Models.State", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CitiId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SubName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SubNameUa")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CitiId");
-
-                    b.ToTable("States");
                 });
 
             modelBuilder.Entity("MyBoard.Models.User", b =>
@@ -402,15 +385,6 @@ namespace Board.Migrations
                     b.HasOne("MyBoard.Models.Advert", "Advert")
                         .WithMany("AdvertPhotos")
                         .HasForeignKey("AdvertId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("MyBoard.Models.State", b =>
-                {
-                    b.HasOne("MyBoard.Models.Citi", "Citi")
-                        .WithMany("State")
-                        .HasForeignKey("CitiId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
